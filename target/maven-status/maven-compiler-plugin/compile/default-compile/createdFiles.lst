@@ -1,0 +1,8 @@
+Drawable\DrawableElipse.class
+models\Circle.class
+Drawable\DrawableSquare.class
+controllers\CustomGson.class
+Drawable\DrawableCircle.class
+services\AreaCalculator.class
+models\Elipse.class
+models\Square.class
