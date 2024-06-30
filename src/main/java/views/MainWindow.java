@@ -6,27 +6,74 @@ package views;
 
 import DAO.DrawablesDao;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+
+import models.Circle;  // Importa el modelo de círculo
+import models.Rectangle;  // Importa el modelo de rectángulo
+import models.Square;
+import models.Elipse;
+import models.Point;
+import controllers.MainController;
+
 /**
  *
  * @author ESTUDIANTE
  */
 public class MainWindow extends JFrame {
     private MainPanel panel;
+    private DrawablesDao drawablesDao;
+    private MainController controller;
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
         this.setLayout(new BorderLayout());
+        this.drawablesDao = new DrawablesDao();
     }
+
+  
     public MainPanel getPanel() {
         return panel;
     }
 
-    public void setPanel(DrawablesDao drawables){
+    public void setPanel(DrawablesDao drawables, MainController controller){
+        this.drawablesDao = drawables;
+        this.controller = controller;
         panel = new MainPanel(drawables);
         this.add(panel, BorderLayout.CENTER);
+        
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
+
+        JButton addCircleButton = new JButton("Add Circle");
+        addCircleButton.addActionListener((ActionEvent e) -> {
+            controller.addCircle();
+            panel.repaint();
+        });
+
+        JButton addRectangleButton = new JButton("Add Rectangle");
+        addRectangleButton.addActionListener((ActionEvent e) -> {
+            controller.addRectangle();
+            panel.repaint();
+        });
+
+        JButton addSquareButton = new JButton("Add Square");
+        addSquareButton.addActionListener((ActionEvent e) -> {
+            controller.addSquare();
+            panel.repaint();
+        });
+
+        buttonPanel.add(addCircleButton);
+        buttonPanel.add(addRectangleButton);
+        buttonPanel.add(addSquareButton);
+        this.add(buttonPanel, BorderLayout.SOUTH);
+        
         this.setSize(1366, 726); // Tamaño inicial del JFrame
         this.setVisible(true);  // Hacer visible la ventana
     }
@@ -86,8 +133,8 @@ public class MainWindow extends JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.setPanel(new DrawablesDao());
+                MainController controller1 = new MainController();
+                controller1.start();
             }
         });
     }

@@ -31,6 +31,10 @@ public class Circle extends Shape{
         return Math.PI * radius * radius;
     }
 
+    /**
+     *
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

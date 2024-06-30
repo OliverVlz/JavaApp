@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.List;
 
 import models.Shape;  // Importa el modelo de figura
 import models.Circle;  // Importa el modelo de círculo
@@ -24,6 +25,7 @@ import models.Elipse;
 public class MainPanel extends javax.swing.JPanel {
     private final DrawablesDao drawables;
     private final JLabel areaLabel;
+    
     /**
      * Creates new form MainPanel
      * @param dao
@@ -66,14 +68,12 @@ public class MainPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     @Override
-        protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        // Itera sobre las figuras y las dibuja
-        for (Drawable d : drawables.getDrawables()) {
-            if (d instanceof Shape shape) {
-                shape.draw(g);
-            }
+        List<Shape> shapes = drawables.getShapes();
+        for (Shape shape : shapes) {
+            shape.draw(g);
+            repaint();
         }
     }
 

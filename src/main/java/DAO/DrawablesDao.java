@@ -5,8 +5,12 @@
 package DAO;
 
 import Drawable.Drawable;
+import Drawable.DrawableRectangle;
+import Drawable.DrawableSquare;
 import java.util.ArrayList;
 import java.util.List;
+import models.Circle;
+import models.Elipse;
 import models.Shape;
 
 /**
@@ -17,7 +21,7 @@ public class DrawablesDao {
     ArrayList <Drawable> drawables;
 
     public DrawablesDao() {
-        drawables=new ArrayList();
+        drawables = new ArrayList<>();
     }
     public void add(Drawable drawable)
     {
@@ -36,6 +40,22 @@ public class DrawablesDao {
             }
         }
         return shapes;
+    }
+
+    public void addShape(Circle circle) {
+        drawables.add((Drawable) circle);
+    }
+
+    public void addShape(Elipse elipse) {
+        drawables.add((Drawable) elipse);
+    }
+
+    public void addShape(DrawableRectangle rectangle) {
+        drawables.add((Drawable) rectangle);
+    }
+
+    public void addShape(DrawableSquare square) {
+        drawables.add((Drawable) square);
     }
     
 }

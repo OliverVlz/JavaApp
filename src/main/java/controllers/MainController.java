@@ -5,7 +5,6 @@
 package controllers;
 
 import DAO.DrawablesDao;
-import Drawable.Drawable;
 import Drawable.DrawableRectangle;
 import Drawable.DrawableElipse;
 import Drawable.DrawableCircle;
@@ -36,8 +35,8 @@ public class MainController {
        drawables = new DrawablesDao();
        areaService = new AreaCalculator();
        
-       initializeDrawables();
-       window.setPanel(drawables);
+       //initializeDrawables();
+       window.setPanel(drawables, this);
        areaPercentage();
        //Gson json = CustomGson.getGson(); // Usar CustomGson para obtener Gson
        //System.out.println(json.toJson(drawables.getDrawables()));
@@ -45,11 +44,28 @@ public class MainController {
     }
     
     public void start(){
-          
         window.setVisible(true);
     }
     
-    private void initializeDrawables(){
+    public void addCircle() {
+        DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, Color.RED);
+        drawables.addShape(circle);
+        areaPercentage();
+    }
+
+    public void addRectangle() {
+        DrawableRectangle rectangle = new DrawableRectangle(new Point(150, 150), 100, 200, Color.BLUE);
+        drawables.addShape(rectangle);
+        areaPercentage();
+    }
+
+    public void addSquare() {
+        DrawableSquare square = new DrawableSquare(new Point(200, 200), 100, Color.RED);
+        drawables.addShape(square);
+        areaPercentage();
+    }
+    
+    /*private void initializeDrawables(){
         
        DrawableRectangle rectangle=new DrawableRectangle(
             new Point(683, 363),400,600, Color.BLUE
@@ -57,9 +73,9 @@ public class MainController {
        DrawableSquare square = new DrawableSquare(
             new Point(700, 500), 100, Color.RED
        );
-       /*DrawableElipse elipse = new DrawableElipse(
+       DrawableElipse elipse = new DrawableElipse(
             new Point(600, 600), 100, 50, Color.BLUE
-       );*/
+       );
        
        DrawableCircle circle = new DrawableCircle(
             new Point(683, 363), 50, Color.RED
@@ -69,7 +85,7 @@ public class MainController {
        //drawables.add(elipse);
        drawables.add(circle);
        drawables.add(square);
-    }
+    }*/
 
     private void areaPercentage() {
         List<Shape> shapes = drawables.getShapes();
