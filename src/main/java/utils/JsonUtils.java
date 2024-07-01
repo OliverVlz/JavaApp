@@ -8,33 +8,38 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
+import Drawable.Drawable;
 import models.Shape;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class JsonUtils {
 
     private final Gson gson;
+    private static final Logger logger = Logger.getLogger(JsonUtils.class.getName());
 
     public JsonUtils() {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    // Método para convertir una lista de figuras a JSON y guardar en un archivo
     public void saveToJson(List<Shape> shapes, String filename) {
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(shapes, writer);
+            logger.log(Level.INFO, "Figuras guardadas en {0}", filename); // Debugging line
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error guardando figuras en " + filename, e);
         }
     }
 
-    // Método para leer un archivo JSON y convertirlo a una lista de figuras
     public List<Shape> loadFromJson(String filename) {
         List<Shape> shapes = null;
         try (FileReader reader = new FileReader(filename)) {
-            Type listType = new TypeToken<List<Shape>>() {}.getType();
-            shapes = gson.fromJson(reader, listType);
+            shapes = gson.fromJson(reader, new TypeToken<List<Shape>>() {}.getType());
+            logger.log(Level.INFO, "Figuras cargadas desde {0}", filename); // Debugging line
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error cargando figuras desde " + filename, e);
         }
         return shapes;
     }

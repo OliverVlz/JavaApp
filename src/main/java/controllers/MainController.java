@@ -38,7 +38,7 @@ public class MainController {
        
        //initializeDrawables();
        window.setPanel(drawables, this);
-       areaPercentage();
+       //areaPercentage();
        
        
        //Gson json = CustomGson.getGson(); // Usar CustomGson para obtener Gson
@@ -53,29 +53,55 @@ public class MainController {
     public void addCircle(Color color) {
         DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, color);
         drawables.addShape(circle);
-        areaPercentage();
+        updateUIAfterLoading();
+        //areaPercentage();
     }
 
     public void addRectangle(Color color) {
         DrawableRectangle rectangle = new DrawableRectangle(new Point(150, 150), 100, 200, color);
         drawables.addShape(rectangle);
-        areaPercentage();
+        updateUIAfterLoading();
+        //areaPercentage();
     }
 
     public void addSquare(Color color) {
         DrawableSquare square = new DrawableSquare(new Point(200, 200), 100, color);
         drawables.addShape(square);
-        areaPercentage();
+        updateUIAfterLoading();
+        //areaPercentage();
     }
 
     public void addElipse(Color color) {
         DrawableElipse elipse = new DrawableElipse(new Point(200, 200), 100, 50, color);
         drawables.addShape(elipse);
-        areaPercentage();
+        updateUIAfterLoading();
+        //areaPercentage();
     }
     
+     public void saveFigures(String filename) {
+        drawables.saveToJson(filename);
+    }
 
-    private void areaPercentage() {
+    public void loadFigures(String filename) {
+        drawables.loadFromJson(filename);
+        // Actualiza la interfaz de usuario después de cargar las figuras
+        updateUIAfterLoading();
+    }
+    
+    private void updateUIAfterLoading() {
+        // Aquí puedes actualizar el área y redibujar las figuras en el panel
+        String message = areaPercentage();
+        window.getPanel().updateAreaLabel(message);
+        window.getPanel().repaint();  // Redibuja el panel con las nuevas figuras cargadas
+    }
+
+    public String areaPercentage() {
+        List<Shape> shapes = drawables.getShapes();
+        areaService.updateAreas(shapes);
+        double percentage = areaService.calculatePercentage();
+        return "Area total " + percentage + "%";
+    }
+    /*private void areaPercentage() {
         List<Shape> shapes = drawables.getShapes();
         areaService.updateAreas(shapes);
         double percentage = areaService.calculatePercentage();
@@ -83,12 +109,8 @@ public class MainController {
         String message = "Area total " + percentage + "%";
         System.out.println(message); // Imprime en la consola
         window.getPanel().updateAreaLabel(message);
-        /*if (window.getPanel() != null) {
-            window.getPanel().updateAreaLabel(message);
-        } else {
-            System.err.println("MainPanel en MainWindow es nulo");
-        }*/
-    }
+        
+    }*/
     
 
  

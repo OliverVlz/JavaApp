@@ -10,15 +10,18 @@ import java.util.Map;
 import models.Circle;
 import models.Elipse;
 import models.Shape;
+import utils.JsonUtils;
 
 /**
  * DAO para manejar figuras dibujables.
  */
 public class DrawablesDao {
     private final Map<String, Drawable> drawables;
+    private final JsonUtils jsonUtils;
 
     public DrawablesDao() {
         drawables = new HashMap<>();
+        jsonUtils = new JsonUtils();
     }
 
     /**
@@ -111,6 +114,21 @@ public class DrawablesDao {
     public void updateDrawable(String id, Drawable updatedDrawable) {
         if (drawables.containsKey(id)) {
             drawables.put(id, updatedDrawable);
+        }
+    }
+    
+    public void saveToJson(String filename) {
+        List<Shape> shapes = getShapes();
+        jsonUtils.saveToJson(shapes, filename);
+    }
+
+    public void loadFromJson(String filename) {
+        List<Shape> shapes = jsonUtils.loadFromJson(filename);
+        if (shapes != null) {
+            drawables.clear();
+            for (Shape shape : shapes) {
+                drawables.put(shape.getId(), (Drawable) shape);
+            }
         }
     }
 }

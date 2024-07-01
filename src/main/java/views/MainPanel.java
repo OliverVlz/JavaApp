@@ -6,10 +6,13 @@ package views;
 
 import DAO.DrawablesDao;
 import Drawable.Drawable;
+import controllers.MainController;
 import java.awt.Graphics;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,6 +20,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import java.io.File;
 import models.Shape;  // Importa el modelo de figura
 import models.Circle;  // Importa el modelo de círculo
 import models.Rectangle;  // Importa el modelo de rectángulo
@@ -34,6 +39,7 @@ public class MainPanel extends javax.swing.JPanel {
     private final JLabel areaLabel;
     private final JLabel selectedLabel; // Label para mostrar la figura seleccionada
     private Drawable selectedDrawable; // Figura seleccionada
+    private MainController controller;
     private int prevX, prevY;
     private JButton rotateButton;
     private JButton deleteSelectedButton;
@@ -50,7 +56,7 @@ public class MainPanel extends javax.swing.JPanel {
         this.setSize(1366,726);
         this.drawables=dao;
         this.setLayout(null);
-        this.areaLabel = new JLabel("Area total: 0%zxvzxcvzxcvzxcvxzcv");
+        this.areaLabel = new JLabel("Area total: 0% :/");
         this.areaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         this.areaLabel.setForeground(Color.BLACK);
         this.add(areaLabel);  // Agregar el JLabel al panel
@@ -149,6 +155,33 @@ public class MainPanel extends javax.swing.JPanel {
         });
         deleteAllButton.setBounds(400, 530, 200, 30);
         this.add(deleteAllButton);
+        
+        
+        /* Guardar y Cargar */
+        
+        JButton saveButton = new JButton("Guardar Figuras");
+        saveButton.addActionListener((ActionEvent e) -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                controller.saveFigures(selectedFile.getAbsolutePath());
+            }
+        });
+        saveButton.setBounds(10, 430, 150, 30);
+        this.add(saveButton);
+
+        JButton loadButton = new JButton("Cargar Figuras");
+        loadButton.addActionListener((ActionEvent e) -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                controller.loadFigures(selectedFile.getAbsolutePath());
+            }
+        });
+        loadButton.setBounds(170, 430, 150, 30);
+        this.add(loadButton);
     }
 
     private void deleteSelectedShape() {
@@ -303,7 +336,7 @@ public class MainPanel extends javax.swing.JPanel {
 
 
 
-    
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
