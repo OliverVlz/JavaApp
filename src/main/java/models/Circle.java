@@ -40,9 +40,10 @@ public class Circle extends Shape{
     /**
      *
      * @param g
+     * @param selected
      */
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g, boolean selected) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
    

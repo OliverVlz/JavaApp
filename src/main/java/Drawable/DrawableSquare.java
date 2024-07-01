@@ -20,10 +20,15 @@ public class DrawableSquare extends Square implements Drawable {
     }
 
     @Override
-    public void draw(Graphics g) {
-        g.setColor(getColor());
+    public void draw(Graphics g, boolean selected) {
+        g.setColor(selected ? Color.GREEN : getColor());
         g.drawRect(this.getStart().getX() - getSide() / 2,
                    this.getStart().getY() - getSide() / 2,
                    getSide(), getSide());
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

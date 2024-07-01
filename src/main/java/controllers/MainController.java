@@ -17,6 +17,7 @@ import services.AreaCalculator;
 import java.util.List;
 import views.MainWindow;
 import java.awt.Color;
+import javax.swing.JRadioButton;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,45 +48,30 @@ public class MainController {
         window.setVisible(true);
     }
     
-    public void addCircle() {
-        DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, Color.RED);
+    public void addCircle(Color color) {
+        DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, color);
         drawables.addShape(circle);
         areaPercentage();
     }
 
-    public void addRectangle() {
-        DrawableRectangle rectangle = new DrawableRectangle(new Point(150, 150), 100, 200, Color.BLUE);
+    public void addRectangle(Color color) {
+        DrawableRectangle rectangle = new DrawableRectangle(new Point(150, 150), 100, 200, color);
         drawables.addShape(rectangle);
         areaPercentage();
     }
 
-    public void addSquare() {
-        DrawableSquare square = new DrawableSquare(new Point(200, 200), 100, Color.RED);
+    public void addSquare(Color color) {
+        DrawableSquare square = new DrawableSquare(new Point(200, 200), 100, color);
         drawables.addShape(square);
         areaPercentage();
     }
+
+    public void addElipse(Color color) {
+        DrawableElipse elipse = new DrawableElipse(new Point(200, 200), 100, 100, color);
+        drawables.addShape(elipse);
+        areaPercentage();
+    }
     
-    /*private void initializeDrawables(){
-        
-       DrawableRectangle rectangle=new DrawableRectangle(
-            new Point(683, 363),400,600, Color.BLUE
-       ); 
-       DrawableSquare square = new DrawableSquare(
-            new Point(700, 500), 100, Color.RED
-       );
-       DrawableElipse elipse = new DrawableElipse(
-            new Point(600, 600), 100, 50, Color.BLUE
-       );
-       
-       DrawableCircle circle = new DrawableCircle(
-            new Point(683, 363), 50, Color.RED
-        );
-      
-       drawables.add(rectangle);
-       //drawables.add(elipse);
-       drawables.add(circle);
-       drawables.add(square);
-    }*/
 
     private void areaPercentage() {
         List<Shape> shapes = drawables.getShapes();

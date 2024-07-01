@@ -50,8 +50,28 @@ public class Elipse extends Shape {
         return Math.PI * semiMajorAxis * semiMinorAxis;
     }
 
+     /**
+     * Verifica si un punto está dentro de la elipse.
+     * @param point El punto a verificar.
+     * @return true si el punto está dentro de la elipse, false de lo contrario.
+     */
+    public boolean isPointInsideShape(Point point) {
+        // Coordenadas del punto relativas al centro de la elipse
+        int dx = point.getX() - getStart().getX();
+        int dy = point.getY() - getStart().getY();
+
+        // Verificar si el punto satisface la ecuación de la elipse
+        double value = Math.pow(dx, 2) / Math.pow(semiMajorAxis, 2) + Math.pow(dy, 2) / Math.pow(semiMinorAxis, 2);
+        return value <= 1;
+    }
+    
+    /**
+     *
+     * @param g
+     * @param selected
+     */
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g, boolean selected) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

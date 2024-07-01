@@ -12,10 +12,15 @@ public class DrawableElipse extends Elipse implements Drawable {
     }
 
     @Override
-    public void draw(Graphics g) {
-        g.setColor(getColor());
+    public void draw(Graphics g, boolean selected) {
+        g.setColor(selected ? Color.GREEN : getColor());
         g.drawOval(this.getStart().getX() - getSemiMajorAxis(),
                    this.getStart().getY() - getSemiMinorAxis(),
                    getWidth(), getHeight());
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

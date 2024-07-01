@@ -18,6 +18,8 @@ import models.Circle;  // Importa el modelo de círculo
 import models.Rectangle;  // Importa el modelo de rectángulo
 import models.Square;
 import models.Elipse;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -28,6 +30,8 @@ public class MainPanel extends javax.swing.JPanel {
     private final JLabel areaLabel;
     private final JLabel selectedLabel; // Label para mostrar la figura seleccionada
     private Drawable selectedDrawable; // Figura seleccionada
+    //private JRadioButton redRadioButton; // RadioButton para color rojo
+    //private JRadioButton blueRadioButton; // RadioButton para color azul
     
     /**
      * Creates new form MainPanel
@@ -51,7 +55,34 @@ public class MainPanel extends javax.swing.JPanel {
         this.add(selectedLabel);
         this.selectedLabel.setBounds(20, 50, 300, 30);
         
-         // Agregar listener de mouse para detectar clics
+        /*// RadioButton para color rojo
+        redRadioButton = new JRadioButton("Rojo");
+        redRadioButton.setSelected(false); // No seleccionado por defecto
+        redRadioButton.addActionListener(e -> {
+            if (redRadioButton.isSelected()) {
+                changeSelectedColor(Color.RED); // Cambiar color seleccionado a rojo
+            }
+        });
+        redRadioButton.setBounds(20, 100, 80, 30);
+        this.add(redRadioButton);
+        
+        // RadioButton para color azul (predeterminado seleccionado)
+        blueRadioButton = new JRadioButton("Azul");
+        blueRadioButton.setSelected(true); // Seleccionado por defecto
+        blueRadioButton.addActionListener(e -> {
+            if (blueRadioButton.isSelected()) {
+                changeSelectedColor(Color.BLUE); // Cambiar color seleccionado a azul
+            }
+        });
+        blueRadioButton.setBounds(120, 100, 80, 30);
+        this.add(blueRadioButton);
+        
+        // Agrupar los RadioButtons para que solo uno pueda estar seleccionado a la vez
+        ButtonGroup colorButtonGroup = new ButtonGroup();
+        colorButtonGroup.add(redRadioButton);
+        colorButtonGroup.add(blueRadioButton);*/
+        
+        // Agregar listener de mouse para detectar clics
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -108,46 +139,51 @@ public class MainPanel extends javax.swing.JPanel {
      * @return true si el punto está dentro de la figura, false de lo contrario.
      */
     private boolean isPointInsideShape(int x, int y, Shape shape) {
-        // Implementa la lógica adecuada para determinar si el punto (x, y) está dentro de la figura.
-        // Por ejemplo, para círculos, rectángulos, etc., verifica las coordenadas adecuadas.
-        // Aquí un ejemplo básico para círculos:
         if (shape instanceof Circle) {
             Circle circle = (Circle) shape;
             int dx = x - circle.getStart().getX();
             int dy = y - circle.getStart().getY();
             return dx * dx + dy * dy <= circle.getRadius() * circle.getRadius();
+        } else if (shape instanceof Rectangle) {
+            Rectangle rectangle = (Rectangle) shape;
+            int startX = rectangle.getStart().getX();
+            int startY = rectangle.getStart().getY();
+            return x >= startX && x <= startX + rectangle.getWidth() &&
+                   y >= startY && y <= startY + rectangle.getHeight();
+        } else if (shape instanceof Square) {
+            Square square = (Square) shape;
+            int startX = square.getStart().getX();
+            int startY = square.getStart().getY();
+            return x >= startX && x <= startX + square.getSide() &&
+                   y >= startY && y <= startY + square.getSide();
+        } else if (shape instanceof Elipse) {
+            Elipse elipse = (Elipse) shape;
+            int centerX = elipse.getStart().getX();
+            int centerY = elipse.getStart().getY();
+            double dx = x - centerX;
+            double dy = y - centerY;
+            return (dx * dx) / (elipse.getSemiMajorAxis() * elipse.getSemiMajorAxis()) +
+                   (dy * dy) / (elipse.getSemiMinorAxis() * elipse.getSemiMinorAxis()) <= 1;
         }
-        // Agrega más lógica según el tipo de figura si es necesario
-        return false; // Placeholder, implementa la lógica adecuada
+        return false; // Si la figura no es reconocida, devuelve false
     }
+
     
 
-    /**
-     * Método para dibujar las figuras.
-     * @param g Objeto Graphics para dibujar.
-     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         List<Shape> shapes = drawables.getShapes();
         for (Shape shape : shapes) {
-            shape.draw(g);
-
-            // Dibujar indicador visual para la figura seleccionada, si existe
-            if (selectedDrawable instanceof Shape && selectedDrawable.equals(shape)) {
-                g.setColor(Color.GREEN);
-
-                // Verificar si es un círculo y dibujar el indicador visual apropiado
-                if (shape instanceof Circle) {
-                    Circle circle = (Circle) shape;
-                    g.drawOval(circle.getStart().getX() - 5, circle.getStart().getY() - 5,
-                               circle.getRadius() * 2 + 10, circle.getRadius() * 2 + 10);
-                }
-                // Agregar más verificaciones para otros tipos de figuras si es necesario
+            if (selectedDrawable != null && selectedDrawable.equals(shape)) {
+                shape.draw(g, true); // Dibuja la figura seleccionada con una bandera
+            } else {
+                shape.draw(g, false); // Dibuja las demás figuras normalmente
             }
         }
     }
+
 
 
     

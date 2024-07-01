@@ -12,11 +12,16 @@ public class DrawableCircle extends Circle implements Drawable {
     }
 
      @Override
-    public void draw(Graphics g) {
-        g.setColor(getColor());
+    public void draw(Graphics g, boolean selected) {
+        g.setColor(selected ? Color.GREEN : getColor());
         g.drawOval(this.getStart().getX() - getRadius(),
                    this.getStart().getY() - getRadius(),
                    getRadius() * 2, getRadius() * 2);
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
 

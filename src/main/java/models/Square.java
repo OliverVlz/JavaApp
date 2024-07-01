@@ -31,8 +31,26 @@ public class Square extends Shape{
         return side * side;
     }
 
+    public boolean isPointInsideShape(Point point) {
+        int x = point.getX();
+        int y = point.getY();
+
+        // Coordenadas del cuadrado
+        int startX = getStart().getX();
+        int startY = getStart().getY();
+
+        // Verificar si el punto está dentro del cuadrado
+        return x >= startX && x <= startX + side &&
+               y >= startY && y <= startY + side;
+    }
+    
+    /**
+     *
+     * @param g
+     * @param selected
+     */
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g, boolean selected) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
    

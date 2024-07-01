@@ -14,12 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
+
 import models.Circle;  // Importa el modelo de círculo
 import models.Rectangle;  // Importa el modelo de rectángulo
 import models.Square;
 import models.Elipse;
 import models.Point;
 import controllers.MainController;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -29,6 +31,8 @@ public class MainWindow extends JFrame {
     private MainPanel panel;
     private DrawablesDao drawablesDao;
     private MainController controller;
+    private JRadioButton redRadioButton;
+    private JRadioButton blueRadioButton;
     /**
      * Creates new form MainWindow
      */
@@ -52,30 +56,67 @@ public class MainWindow extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
 
         JButton addCircleButton = new JButton("Add Circle");
-        addCircleButton.addActionListener((ActionEvent e) -> {
-            controller.addCircle();
-            panel.repaint();
+            addCircleButton.addActionListener((ActionEvent e) -> {
+                Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                controller.addCircle(color); // Llamar al método con el color seleccionado
+                panel.repaint();
         });
 
         JButton addRectangleButton = new JButton("Add Rectangle");
         addRectangleButton.addActionListener((ActionEvent e) -> {
-            controller.addRectangle();
-            panel.repaint();
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                controller.addRectangle(color); // Llamar al método con el color seleccionado
+                panel.repaint();
         });
 
         JButton addSquareButton = new JButton("Add Square");
         addSquareButton.addActionListener((ActionEvent e) -> {
-            controller.addSquare();
-            panel.repaint();
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                controller.addSquare(color); // Llamar al método con el color seleccionado
+                panel.repaint();
+        });
+        
+        JButton addElipseButton = new JButton("Add Elipse");
+        addElipseButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                controller.addElipse(color); // Llamar al método con el color seleccionado
+                panel.repaint();
         });
 
+        // Agrupar los RadioButtons para el color
+        redRadioButton = new JRadioButton("Rojo");
+        redRadioButton.setSelected(false);
+        redRadioButton.addActionListener(e -> {
+            if (redRadioButton.isSelected()) {
+                blueRadioButton.setSelected(false);
+            }
+        });
+
+        blueRadioButton = new JRadioButton("Azul");
+        blueRadioButton.setSelected(true);
+        blueRadioButton.addActionListener(e -> {
+            if (blueRadioButton.isSelected()) {
+                redRadioButton.setSelected(false);
+            }
+        });
+        
+        // Agregar RadioButtons al panel
+        JPanel radioButtonPanel = new JPanel();
+        radioButtonPanel.add(redRadioButton);
+        radioButtonPanel.add(blueRadioButton);
+        
         buttonPanel.add(addCircleButton);
         buttonPanel.add(addRectangleButton);
         buttonPanel.add(addSquareButton);
+        buttonPanel.add(addElipseButton);
+       
+        // Agregar componentes al JFrame
         this.add(buttonPanel, BorderLayout.SOUTH);
-        
+        this.add(radioButtonPanel, BorderLayout.NORTH);
+        this.add(panel, BorderLayout.CENTER);
+
         this.setSize(1366, 726); // Tamaño inicial del JFrame
-        this.setVisible(true);  // Hacer visible la ventana
+        this.setVisible(true); // Hacer visible la ventana
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -130,12 +171,10 @@ public class MainWindow extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                MainController controller1 = new MainController();
-                controller1.start();
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            MainController controller = new MainController();
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.setPanel(new DrawablesDao(), controller);
         });
     }
 

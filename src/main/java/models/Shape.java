@@ -46,5 +46,6 @@ public abstract class Shape {
     public abstract double area();
 
      // Método abstracto para dibujar la figura
-    public abstract void draw(Graphics g);
+    public abstract void draw(Graphics g, boolean selected);
+
 }
