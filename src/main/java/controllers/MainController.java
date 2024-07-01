@@ -29,11 +29,13 @@ public class MainController {
     DrawablesDao drawables;
     MainWindow window;
     AreaCalculator areaService;
+    int shapeCounter;
     
     public MainController() {
        window = new MainWindow();
        drawables = new DrawablesDao();
        areaService = new AreaCalculator();
+       this.shapeCounter = 0;
        
        //initializeDrawables();
        window.setPanel(drawables, this);
@@ -48,7 +50,7 @@ public class MainController {
     }
     
     public void addCircle() {
-        DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, Color.RED);
+        DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, Color.RED, ++shapeCounter);
         drawables.addShape(circle);
         areaPercentage();
     }
@@ -87,6 +89,13 @@ public class MainController {
        drawables.add(square);
     }*/
 
+     public void moveSelectedShape(int id, Point newLocation) {
+        Shape shape = drawables.getShapeById(id);
+        if (shape != null) {
+            shape.setStart(newLocation);
+        }
+    }
+     
     private void areaPercentage() {
         List<Shape> shapes = drawables.getShapes();
         areaService.updateAreas(shapes);

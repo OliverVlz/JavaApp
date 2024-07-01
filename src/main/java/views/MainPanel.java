@@ -11,6 +11,9 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Point;
 
 import models.Shape;  // Importa el modelo de figura
 import models.Circle;  // Importa el modelo de círculo
@@ -25,7 +28,7 @@ import models.Elipse;
 public class MainPanel extends javax.swing.JPanel {
     private final DrawablesDao drawables;
     private final JLabel areaLabel;
-    
+    private Shape selectedShape;
     /**
      * Creates new form MainPanel
      * @param dao
@@ -40,6 +43,21 @@ public class MainPanel extends javax.swing.JPanel {
         this.areaLabel.setForeground(Color.BLACK);
         this.add(areaLabel);  // Agregar el JLabel al panel
         this.areaLabel.setBounds(20, 20, 300, 30);
+        
+        // Añadir un MouseListener para detectar clics en las figuras
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Point clickPoint = e.getPoint();
+                for (Shape shape : drawables.getShapes()) {
+                    if (shape.contains(clickPoint)) {
+                        selectedShape = shape;
+                        repaint();
+                        break;
+                    }
+                }
+            }
+        });
     }
     
     public void updateAreaLabel(String text) {
@@ -73,6 +91,24 @@ public class MainPanel extends javax.swing.JPanel {
         List<Shape> shapes = drawables.getShapes();
         for (Shape shape : shapes) {
             shape.draw(g);
+            if (shape == selectedShape) {
+                g.setColor(Color.BLACK);
+                g.drawRect(shape.getX() - 5, shape.getY() - 5, shape.getWidth() + 10, shape.getHeight() + 10);
+            }
+        }
+    }
+
+    // Métodos para mover y cambiar el tamaño de la figura seleccionada
+    public void moveSelectedShape(Point newLocation) {
+        if (selectedShape != null) {
+            selectedShape.move(newLocation);
+            repaint();
+        }
+    }
+
+    public void resizeSelectedShape(int newSize) {
+        if (selectedShape != null) {
+            selectedShape.resize(newSize);
             repaint();
         }
     }

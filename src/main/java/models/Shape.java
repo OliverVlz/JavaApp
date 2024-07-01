@@ -1,25 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.io.Serializable;
 
-/**
- *
- * @author ESTUDIANTE
- */
-public abstract class Shape {
-    Point start;
-    protected Color color;
+public abstract class Shape implements Serializable {
+    private Point start;
+    private Color color;
+    private int id;
 
-    public Shape(Point start, Color color) {
+    public Shape(Point start, Color color, int id) {
         this.start = start;
         this.color = color;
+        this.id = id;
     }
-    
+
     public Point getStart() {
         return start;
     }
@@ -27,7 +23,7 @@ public abstract class Shape {
     public void setStart(Point start) {
         this.start = start;
     }
-    
+
     public Color getColor() {
         return color;
     }
@@ -35,9 +31,18 @@ public abstract class Shape {
     public void setColor(Color color) {
         this.color = color;
     }
-    
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public abstract double area();
 
-     // Método abstracto para dibujar la figura
     public abstract void draw(Graphics g);
+
+    public abstract boolean contains(Point point);
 }
