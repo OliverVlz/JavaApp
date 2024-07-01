@@ -10,6 +10,9 @@ import java.awt.GridLayout;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -53,7 +56,7 @@ public class MainWindow extends JFrame {
         panel = new MainPanel(drawables);
         this.add(panel, BorderLayout.CENTER);
         
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 4));
 
         JButton addCircleButton = new JButton("Add Circle");
             addCircleButton.addActionListener((ActionEvent e) -> {
@@ -100,6 +103,16 @@ public class MainWindow extends JFrame {
             }
         });
         
+        JSlider sizeSlider = new JSlider(50, 150, 100);
+        sizeSlider.setMajorTickSpacing(10);
+        sizeSlider.setMinorTickSpacing(5);
+        sizeSlider.setPaintTicks(true);
+        sizeSlider.setPaintLabels(true);
+        sizeSlider.addChangeListener((ChangeEvent e) -> {
+            int value = sizeSlider.getValue();
+            panel.resizeShape(value / 100.0);
+        });
+        
         // Agregar RadioButtons al panel
         JPanel radioButtonPanel = new JPanel();
         radioButtonPanel.add(redRadioButton);
@@ -109,6 +122,7 @@ public class MainWindow extends JFrame {
         buttonPanel.add(addRectangleButton);
         buttonPanel.add(addSquareButton);
         buttonPanel.add(addElipseButton);
+        buttonPanel.add(sizeSlider);
        
         // Agregar componentes al JFrame
         this.add(buttonPanel, BorderLayout.SOUTH);

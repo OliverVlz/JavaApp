@@ -13,6 +13,9 @@ import java.awt.Font;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import models.Shape;  // Importa el modelo de figura
 import models.Circle;  // Importa el modelo de círculo
 import models.Rectangle;  // Importa el modelo de rectángulo
@@ -30,6 +33,7 @@ public class MainPanel extends javax.swing.JPanel {
     private final JLabel areaLabel;
     private final JLabel selectedLabel; // Label para mostrar la figura seleccionada
     private Drawable selectedDrawable; // Figura seleccionada
+    private int prevX, prevY;
     //private JRadioButton redRadioButton; // RadioButton para color rojo
     //private JRadioButton blueRadioButton; // RadioButton para color azul
     
@@ -88,7 +92,39 @@ public class MainPanel extends javax.swing.JPanel {
             public void mouseClicked(MouseEvent e) {
                 selectDrawable(e.getX(), e.getY());
             }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                selectDrawable(e.getX(), e.getY());
+                prevX = e.getX();
+                prevY = e.getY();
+            }
         });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (selectedDrawable != null && selectedDrawable instanceof Shape shape) {
+                    int deltaX = e.getX() - prevX;
+                    int deltaY = e.getY() - prevY;
+                    shape.move(deltaX, deltaY);
+                    prevX = e.getX();
+                    prevY = e.getY();
+                    repaint();
+                }
+            }
+        });
+        
+         addMouseWheelListener((MouseWheelEvent e) -> {
+             if (selectedDrawable != null) {
+                 if (e.getWheelRotation() < 0) {
+                     resizeShape(1.1);
+                 } else {
+                     resizeShape(0.9);
+                 }
+             }
+        });
+        
     }
     
     /**
@@ -109,6 +145,7 @@ public class MainPanel extends javax.swing.JPanel {
                 }
             }
         }
+      
         // Si no se seleccionó ninguna figura
         selectedDrawable = null;
         updateSelectedLabel("Ninguna figura seleccionada");
@@ -168,7 +205,22 @@ public class MainPanel extends javax.swing.JPanel {
         return false; // Si la figura no es reconocida, devuelve false
     }
 
-    
+    public void resizeShape(double factor) {
+        if (selectedDrawable != null) {
+            if (selectedDrawable instanceof Circle circle) {
+                circle.setRadius((int) (circle.getRadius() * factor));
+            } else if (selectedDrawable instanceof Rectangle rectangle) {
+                rectangle.setWidth((int) (rectangle.getWidth() * factor));
+                rectangle.setHeight((int) (rectangle.getHeight() * factor));
+            } else if (selectedDrawable instanceof Square square) {
+                square.setSide((int) (square.getSide() * factor));
+            } else if (selectedDrawable instanceof Elipse elipse) {
+                elipse.setSemiMajorAxis((int) (elipse.getSemiMajorAxis() * factor));
+                elipse.setSemiMinorAxis((int) (elipse.getSemiMinorAxis() * factor));
+            }
+            repaint();
+        }
+    }
 
     @Override
     protected void paintComponent(Graphics g) {

@@ -48,4 +48,10 @@ public abstract class Shape {
      // Método abstracto para dibujar la figura
     public abstract void draw(Graphics g, boolean selected);
 
+    // Implementación del método move para actualizar las coordenadas
+    public void move(int deltaX, int deltaY) {
+        this.start.setX(this.start.getX() + deltaX);
+        this.start.setY(this.start.getY() + deltaY);
+    }
+
 }
