@@ -6,18 +6,25 @@ package models;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.UUID;
 
 /**
  *
  * @author ESTUDIANTE
  */
 public abstract class Shape {
+    private final String id;
     Point start;
     protected Color color;
 
     public Shape(Point start, Color color) {
+        this.id = UUID.randomUUID().toString();
         this.start = start;
         this.color = color;
+    }
+    
+    public String getId() {
+        return id;
     }
     
     public Point getStart() {

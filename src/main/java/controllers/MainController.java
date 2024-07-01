@@ -26,9 +26,9 @@ import java.io.PrintWriter;
  * @author ESTUDIANTE
  */
 public class MainController {
-    DrawablesDao drawables;
-    MainWindow window;
-    AreaCalculator areaService;
+    private final DrawablesDao drawables;
+    private final MainWindow window;
+    private final AreaCalculator areaService;
     
     public MainController() {
        window = new MainWindow();
@@ -101,5 +101,7 @@ public class MainController {
             System.err.println("MainPanel en MainWindow es nulo");
         }*/
     }
+    
+
  
 }

@@ -6,4 +6,5 @@ Drawable\DrawableCircle.class
 services\AreaCalculator.class
 models\Elipse.class
 utils\JsonUtils.class
+views\MainPanel$1.class
 models\Square.class

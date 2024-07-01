@@ -31,6 +31,12 @@ public class Circle extends Shape{
         return Math.PI * radius * radius;
     }
 
+    public boolean isPointInsideShape(Point point) {
+        int dx = point.getX() - getStart().getX();
+        int dy = point.getY() - getStart().getY();
+        return dx * dx + dy * dy <= radius * radius;
+    }
+    
     /**
      *
      * @param g

@@ -1,40 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import Drawable.Drawable;
 import Drawable.DrawableRectangle;
 import Drawable.DrawableSquare;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import models.Circle;
 import models.Elipse;
 import models.Shape;
 
 /**
- *
- * @author ESTUDIANTE
+ * DAO para manejar figuras dibujables.
  */
 public class DrawablesDao {
-    ArrayList <Drawable> drawables;
+    private final Map<String, Drawable> drawables;
 
     public DrawablesDao() {
-        drawables = new ArrayList<>();
-    }
-    public void add(Drawable drawable)
-    {
-        drawables.add(drawable);
+        drawables = new HashMap<>();
     }
 
-    public ArrayList<Drawable> getDrawables() {
-        return drawables;
+    /**
+     * Añade una figura dibujable al DAO.
+     * @param drawable La figura dibujable a añadir.
+     */
+    public void add(Drawable drawable) {
+        if (drawable instanceof Shape shape) {
+            drawables.put(shape.getId(), drawable);
+        }
     }
 
+    /**
+     * Obtiene todas las figuras dibujables.
+     * @return Una lista de figuras dibujables.
+     */
+    public List<Drawable> getDrawables() {
+        return new ArrayList<>(drawables.values());
+    }
+
+    /**
+     * Obtiene todas las figuras de tipo Shape.
+     * @return Una lista de figuras de tipo Shape.
+     */
     public List<Shape> getShapes() {
         List<Shape> shapes = new ArrayList<>();
-        for (Drawable drawable : drawables) {
+        for (Drawable drawable : drawables.values()) {
             if (drawable instanceof Shape shape) {
                 shapes.add(shape);
             }
@@ -42,20 +53,46 @@ public class DrawablesDao {
         return shapes;
     }
 
+    /**
+     * Añade un círculo al DAO.
+     * @param circle El círculo a añadir.
+     */
     public void addShape(Circle circle) {
-        drawables.add((Drawable) circle);
+        drawables.put(circle.getId(), (Drawable) circle);
     }
 
+    /**
+     * Añade una elipse al DAO.
+     * @param elipse La elipse a añadir.
+     */
     public void addShape(Elipse elipse) {
-        drawables.add((Drawable) elipse);
+        drawables.put(elipse.getId(), (Drawable) elipse);
     }
 
+    /**
+     * Añade un rectángulo dibujable al DAO.
+     * @param rectangle El rectángulo a añadir.
+     */
     public void addShape(DrawableRectangle rectangle) {
-        drawables.add((Drawable) rectangle);
+        drawables.put(rectangle.getId(), (Drawable) rectangle);
     }
 
+    /**
+     * Añade un cuadrado dibujable al DAO.
+     * @param square El cuadrado a añadir.
+     */
     public void addShape(DrawableSquare square) {
-        drawables.add((Drawable) square);
+        drawables.put(square.getId(), (Drawable) square);
     }
-    
+
+    /**
+     * Actualiza una figura dibujable en el DAO.
+     * @param id El identificador de la figura a actualizar.
+     * @param updatedDrawable La nueva figura actualizada.
+     */
+    public void updateDrawable(String id, Drawable updatedDrawable) {
+        if (drawables.containsKey(id)) {
+            drawables.put(id, updatedDrawable);
+        }
+    }
 }
