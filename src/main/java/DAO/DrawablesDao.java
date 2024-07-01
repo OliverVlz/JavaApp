@@ -31,6 +31,24 @@ public class DrawablesDao {
         }
     }
 
+    
+    /**
+    * Elimina una figura dibujable del DAO.
+    * @param drawable La figura dibujable a eliminar.
+    */
+   public void remove(Drawable drawable) {
+       if (drawable instanceof Shape shape) {
+           drawables.remove(shape.getId());
+       }
+   }
+
+    /**
+     * Elimina todas las figuras dibujables del DAO.
+     */
+    public void clear() {
+        drawables.clear();
+    }
+    
     /**
      * Obtiene todas las figuras dibujables.
      * @return Una lista de figuras dibujables.

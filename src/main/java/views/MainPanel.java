@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import javax.swing.JButton;
 import models.Shape;  // Importa el modelo de figura
 import models.Circle;  // Importa el modelo de círculo
 import models.Rectangle;  // Importa el modelo de rectángulo
@@ -34,6 +35,9 @@ public class MainPanel extends javax.swing.JPanel {
     private final JLabel selectedLabel; // Label para mostrar la figura seleccionada
     private Drawable selectedDrawable; // Figura seleccionada
     private int prevX, prevY;
+    private JButton rotateButton;
+    private JButton deleteSelectedButton;
+    private JButton deleteAllButton;
     //private JRadioButton redRadioButton; // RadioButton para color rojo
     //private JRadioButton blueRadioButton; // RadioButton para color azul
     
@@ -86,6 +90,7 @@ public class MainPanel extends javax.swing.JPanel {
         colorButtonGroup.add(redRadioButton);
         colorButtonGroup.add(blueRadioButton);*/
         
+        
         // Agregar listener de mouse para detectar clics
         addMouseListener(new MouseAdapter() {
             @Override
@@ -115,16 +120,69 @@ public class MainPanel extends javax.swing.JPanel {
             }
         });
         
-         addMouseWheelListener((MouseWheelEvent e) -> {
-             if (selectedDrawable != null) {
-                 if (e.getWheelRotation() < 0) {
-                     resizeShape(1.1);
-                 } else {
-                     resizeShape(0.9);
-                 }
-             }
+        addMouseWheelListener((MouseWheelEvent e) -> {
+            if (selectedDrawable != null) {
+                double factor = (e.getWheelRotation() < 0) ? 1.1 : 0.9;
+                resizeShape(factor);
+                synchronizeSliders();
+            }
         });
         
+        rotateButton = new JButton("Rotar Figura");
+           rotateButton.addActionListener(e -> {
+               rotateShape();
+               synchronizeSliders(); // Actualizar los sliders después de la rotación
+           });
+           rotateButton.setBounds(20, 530, 150, 30);
+           this.add(rotateButton);
+        
+        deleteSelectedButton = new JButton("Eliminar Figura Seleccionada");
+        deleteSelectedButton.addActionListener(e -> {
+            deleteSelectedShape();
+        });
+        deleteSelectedButton.setBounds(180, 530, 200, 30);
+        this.add(deleteSelectedButton); 
+        
+        deleteAllButton = new JButton("Eliminar Todas las Figuras");
+        deleteAllButton.addActionListener(e -> {
+            deleteAllShapes();
+        });
+        deleteAllButton.setBounds(400, 530, 200, 30);
+        this.add(deleteAllButton);
+    }
+
+    private void deleteSelectedShape() {
+        if (selectedDrawable != null) {
+            drawables.remove(selectedDrawable); // Elimina la figura de la lista
+            selectedDrawable = null;
+            updateSelectedLabel("Ninguna figura seleccionada");
+            repaint();
+        }
+    }
+    
+    private void deleteAllShapes() {
+        drawables.clear(); // Borra todas las figuras de la lista
+        selectedDrawable = null;
+        updateSelectedLabel("Ninguna figura seleccionada");
+        repaint();
+    }
+    
+    private void rotateShape() {
+        if (selectedDrawable != null) {
+            if (selectedDrawable instanceof Rectangle rectangle) {
+                int currentWidth = rectangle.getWidth();
+                int currentHeight = rectangle.getHeight();
+                rectangle.setWidth(currentHeight);
+                rectangle.setHeight(currentWidth);
+                repaint();
+            } else if (selectedDrawable instanceof Elipse elipse) {
+                int currentSemiMajorAxis = elipse.getSemiMajorAxis();
+                int currentSemiMinorAxis = elipse.getSemiMinorAxis();
+                elipse.setSemiMajorAxis(currentSemiMinorAxis);
+                elipse.setSemiMinorAxis(currentSemiMajorAxis);
+                repaint();
+            }
+        }
     }
     
     /**
@@ -208,19 +266,26 @@ public class MainPanel extends javax.swing.JPanel {
     public void resizeShape(double factor) {
         if (selectedDrawable != null) {
             if (selectedDrawable instanceof Circle circle) {
-                circle.setRadius((int) (circle.getRadius() * factor));
+                int newRadius = (int) (circle.getRadius() * factor);
+                circle.setRadius(Math.max(10, Math.min(200, newRadius))); // Limitar el tamaño entre 10 y 200
             } else if (selectedDrawable instanceof Rectangle rectangle) {
-                rectangle.setWidth((int) (rectangle.getWidth() * factor));
-                rectangle.setHeight((int) (rectangle.getHeight() * factor));
+                int newWidth = (int) (rectangle.getWidth() * factor);
+                int newHeight = (int) (rectangle.getHeight() * factor);
+                rectangle.setWidth(Math.max(10, Math.min(200, newWidth)));
+                rectangle.setHeight(Math.max(20, Math.min(400, newHeight)));
             } else if (selectedDrawable instanceof Square square) {
-                square.setSide((int) (square.getSide() * factor));
+                int newSide = (int) (square.getSide() * factor);
+                square.setSide(Math.max(10, Math.min(200, newSide)));
             } else if (selectedDrawable instanceof Elipse elipse) {
-                elipse.setSemiMajorAxis((int) (elipse.getSemiMajorAxis() * factor));
-                elipse.setSemiMinorAxis((int) (elipse.getSemiMinorAxis() * factor));
+                int newSemiMajorAxis = (int) (elipse.getSemiMajorAxis() * factor);
+                int newSemiMinorAxis = (int) (elipse.getSemiMinorAxis() * factor);
+                elipse.setSemiMajorAxis(Math.max(10, Math.min(200, newSemiMajorAxis)));
+                elipse.setSemiMinorAxis(Math.max(10, Math.min(200, newSemiMinorAxis)));
             }
             repaint();
         }
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -259,6 +324,10 @@ public class MainPanel extends javax.swing.JPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void synchronizeSliders() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

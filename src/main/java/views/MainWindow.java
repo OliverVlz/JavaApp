@@ -5,6 +5,7 @@
 package views;
 
 import DAO.DrawablesDao;
+import Drawable.Drawable;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -33,9 +34,11 @@ import javax.swing.JRadioButton;
 public class MainWindow extends JFrame {
     private MainPanel panel;
     private DrawablesDao drawablesDao;
+    private Drawable selectedDrawable;
     private MainController controller;
     private JRadioButton redRadioButton;
     private JRadioButton blueRadioButton;
+    private JSlider sizeSlider;
     /**
      * Creates new form MainWindow
      */
@@ -56,7 +59,7 @@ public class MainWindow extends JFrame {
         panel = new MainPanel(drawables);
         this.add(panel, BorderLayout.CENTER);
         
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 4));
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 5));
 
         JButton addCircleButton = new JButton("Add Circle");
             addCircleButton.addActionListener((ActionEvent e) -> {
@@ -103,7 +106,7 @@ public class MainWindow extends JFrame {
             }
         });
         
-        JSlider sizeSlider = new JSlider(50, 150, 100);
+        sizeSlider = new JSlider(50, 150, 100);
         sizeSlider.setMajorTickSpacing(10);
         sizeSlider.setMinorTickSpacing(5);
         sizeSlider.setPaintTicks(true);
@@ -112,7 +115,7 @@ public class MainWindow extends JFrame {
             int value = sizeSlider.getValue();
             panel.resizeShape(value / 100.0);
         });
-        
+             
         // Agregar RadioButtons al panel
         JPanel radioButtonPanel = new JPanel();
         radioButtonPanel.add(redRadioButton);

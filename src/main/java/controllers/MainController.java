@@ -39,6 +39,8 @@ public class MainController {
        //initializeDrawables();
        window.setPanel(drawables, this);
        areaPercentage();
+       
+       
        //Gson json = CustomGson.getGson(); // Usar CustomGson para obtener Gson
        //System.out.println(json.toJson(drawables.getDrawables()));
 
@@ -67,7 +69,7 @@ public class MainController {
     }
 
     public void addElipse(Color color) {
-        DrawableElipse elipse = new DrawableElipse(new Point(200, 200), 100, 100, color);
+        DrawableElipse elipse = new DrawableElipse(new Point(200, 200), 100, 50, color);
         drawables.addShape(elipse);
         areaPercentage();
     }
