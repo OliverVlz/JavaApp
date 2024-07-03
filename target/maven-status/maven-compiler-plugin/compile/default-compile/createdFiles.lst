@@ -1,10 +1,12 @@
 models\Circle.class
 utils\JsonUtils$1.class
 controllers\CustomGson.class
+views\MainPanel$4.class
 utils\JsonUtils.class
 views\MainPanel$2.class
 Drawable\DrawableElipse.class
 Drawable\DrawableSquare.class
+views\MainPanel$3.class
 Drawable\DrawableCircle.class
 services\AreaCalculator.class
 models\Elipse.class

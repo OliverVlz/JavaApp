@@ -27,91 +27,21 @@ import java.io.PrintWriter;
  * @author ESTUDIANTE
  */
 public class MainController {
-    private final DrawablesDao drawables;
-    private final MainWindow window;
-    private final AreaCalculator areaService;
+   
+    private  MainWindow window;
+  
     
     public MainController() {
        window = new MainWindow();
-       drawables = new DrawablesDao();
-       areaService = new AreaCalculator();
-       
-       //initializeDrawables();
-       window.setPanel(drawables, this);
-       //areaPercentage();
-       
-       
-       //Gson json = CustomGson.getGson(); // Usar CustomGson para obtener Gson
-       //System.out.println(json.toJson(drawables.getDrawables()));
-
+        
+     
     }
     
     public void start(){
         window.setVisible(true);
     }
     
-    public void addCircle(Color color) {
-        DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, color);
-        drawables.addShape(circle);
-        updateUIAfterLoading();
-        //areaPercentage();
-    }
-
-    public void addRectangle(Color color) {
-        DrawableRectangle rectangle = new DrawableRectangle(new Point(150, 150), 100, 200, color);
-        drawables.addShape(rectangle);
-        updateUIAfterLoading();
-        //areaPercentage();
-    }
-
-    public void addSquare(Color color) {
-        DrawableSquare square = new DrawableSquare(new Point(200, 200), 100, color);
-        drawables.addShape(square);
-        updateUIAfterLoading();
-        //areaPercentage();
-    }
-
-    public void addElipse(Color color) {
-        DrawableElipse elipse = new DrawableElipse(new Point(200, 200), 100, 50, color);
-        drawables.addShape(elipse);
-        updateUIAfterLoading();
-        //areaPercentage();
-    }
-    
-     public void saveFigures(String filename) {
-        drawables.saveToJson(filename);
-    }
-
-    public void loadFigures(String filename) {
-        drawables.loadFromJson(filename);
-        // Actualiza la interfaz de usuario después de cargar las figuras
-        updateUIAfterLoading();
-    }
-    
-    private void updateUIAfterLoading() {
-        // Aquí puedes actualizar el área y redibujar las figuras en el panel
-        String message = areaPercentage();
-        window.getPanel().updateAreaLabel(message);
-        window.getPanel().repaint();  // Redibuja el panel con las nuevas figuras cargadas
-    }
-
-    public String areaPercentage() {
-        List<Shape> shapes = drawables.getShapes();
-        areaService.updateAreas(shapes);
-        double percentage = areaService.calculatePercentage();
-        return "Area total " + percentage + "%";
-    }
-    /*private void areaPercentage() {
-        List<Shape> shapes = drawables.getShapes();
-        areaService.updateAreas(shapes);
-        double percentage = areaService.calculatePercentage();
-
-        String message = "Area total " + percentage + "%";
-        System.out.println(message); // Imprime en la consola
-        window.getPanel().updateAreaLabel(message);
-        
-    }*/
-    
+       
 
  
 }

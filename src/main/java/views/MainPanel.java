@@ -1,16 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package views;
 
 import DAO.DrawablesDao;
 import Drawable.Drawable;
+import Drawable.DrawableCircle;
+import Drawable.DrawableElipse;
+import Drawable.DrawableRectangle;
+import Drawable.DrawableSquare;
 import controllers.MainController;
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -28,14 +31,23 @@ import models.Rectangle;  // Importa el modelo de rectángulo
 import models.Square;
 import models.Elipse;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import models.Point;
+import services.AreaCalculator;
+
 
 /**
  *
  * @author ESTUDIANTE
  */
 public class MainPanel extends javax.swing.JPanel {
-    private final DrawablesDao drawables;
+    private  DrawablesDao drawables;
     private final JLabel areaLabel;
     private final JLabel selectedLabel; // Label para mostrar la figura seleccionada
     private Drawable selectedDrawable; // Figura seleccionada
@@ -44,24 +56,29 @@ public class MainPanel extends javax.swing.JPanel {
     private JButton rotateButton;
     private JButton deleteSelectedButton;
     private JButton deleteAllButton;
-    //private JRadioButton redRadioButton; // RadioButton para color rojo
-    //private JRadioButton blueRadioButton; // RadioButton para color azul
+    private JLabel dibujarFigurasLabel; // Nuevo JLabel para dibujar figuras
+    private JLabel lblImagen; // Etiqueta para la imagen
+    private JLayeredPane layeredPane; // Panel de capas para manejar la superposición
+    private JButton selectImageButton; // Botón para seleccionar imagen
+    private JRadioButton redRadioButton;
+    private JRadioButton blueRadioButton;
+    private JSlider sizeSlider;
+     private  MainWindow window;
+    private final AreaCalculator areaService;
     
-    /**
-     * Creates new form MainPanel
-     * @param dao
-     */
-    public MainPanel(DrawablesDao dao) {
+    public MainPanel() {
+        
         initComponents();
         this.setSize(1366,726);
-        this.drawables=dao;
+       drawables= new DrawablesDao ();
+       
         this.setLayout(null);
         this.areaLabel = new JLabel("Area total: 0% :/");
         this.areaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         this.areaLabel.setForeground(Color.BLACK);
         this.add(areaLabel);  // Agregar el JLabel al panel
         this.areaLabel.setBounds(20, 20, 300, 30);
-        
+         areaService = new AreaCalculator();
         // Etiqueta para la figura seleccionada
         this.selectedLabel = new JLabel("Figura seleccionada: Ninguna");
         this.selectedLabel.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -69,34 +86,44 @@ public class MainPanel extends javax.swing.JPanel {
         this.add(selectedLabel);
         this.selectedLabel.setBounds(20, 50, 300, 30);
         
-        /*// RadioButton para color rojo
-        redRadioButton = new JRadioButton("Rojo");
-        redRadioButton.setSelected(false); // No seleccionado por defecto
-        redRadioButton.addActionListener(e -> {
-            if (redRadioButton.isSelected()) {
-                changeSelectedColor(Color.RED); // Cambiar color seleccionado a rojo
+        // Configurar el JLabel para dibujar figuras
+        dibujarFigurasLabel = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Dibujar las figuras en el JLabel
+                List<Shape> shapes = drawables.getShapes();
+                for (Shape shape : shapes) {
+                    shape.draw(g, false); // Dibujar las figuras normalmente
+                }
+            }
+        };
+        dibujarFigurasLabel.setSize(800, 400); // Tamaño del JLabel
+        dibujarFigurasLabel.setLocation(100, 100); // Posición del JLabel dentro del panel
+        this.add(dibujarFigurasLabel); // Agregar el JLabel al panel principal
+        
+        
+        lblImagen = new JLabel();
+        lblImagen.setBounds(0, 0, 1366, 726); // Establece los límites para llenar el panel
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setBounds(0, 0, 800, 726); // Establece los límites para llenar el panel
+        this.add(lblImagen);
+         // Agrega los JLabels al JLayeredPane en diferentes capas
+        //layeredPane.add(lblImagen, JLayeredPane.DEFAULT_LAYER); // Capa inferior para la imagen
+        //layeredPane.add(dibujarFigurasLabel, JLayeredPane.PALETTE_LAYER); // Capa superior para las figuras
+
+        // Crea y configura el botón para seleccionar imagen
+        selectImageButton = new JButton("Seleccionar Imagen");
+        selectImageButton.setBounds(800, 100, 250, 50); // Posición y tamaño del botón
+        selectImageButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectImage(); // Llama al método para seleccionar imagen
             }
         });
-        redRadioButton.setBounds(20, 100, 80, 30);
-        this.add(redRadioButton);
-        
-        // RadioButton para color azul (predeterminado seleccionado)
-        blueRadioButton = new JRadioButton("Azul");
-        blueRadioButton.setSelected(true); // Seleccionado por defecto
-        blueRadioButton.addActionListener(e -> {
-            if (blueRadioButton.isSelected()) {
-                changeSelectedColor(Color.BLUE); // Cambiar color seleccionado a azul
-            }
-        });
-        blueRadioButton.setBounds(120, 100, 80, 30);
-        this.add(blueRadioButton);
-        
-        // Agrupar los RadioButtons para que solo uno pueda estar seleccionado a la vez
-        ButtonGroup colorButtonGroup = new ButtonGroup();
-        colorButtonGroup.add(redRadioButton);
-        colorButtonGroup.add(blueRadioButton);*/
-        
-        
+         this.add(selectImageButton);
         // Agregar listener de mouse para detectar clics
         addMouseListener(new MouseAdapter() {
             @Override
@@ -135,53 +162,139 @@ public class MainPanel extends javax.swing.JPanel {
         });
         
         rotateButton = new JButton("Rotar Figura");
-           rotateButton.addActionListener(e -> {
-               rotateShape();
-               synchronizeSliders(); // Actualizar los sliders después de la rotación
-           });
-           rotateButton.setBounds(20, 530, 150, 30);
-           this.add(rotateButton);
+        rotateButton.setBounds(800, 530, 150, 30);
+        rotateButton.addActionListener(e -> {
+            rotateShape();
+            synchronizeSliders(); // Actualizar los sliders después de la rotación
+        });
+        
+        this.add(rotateButton);
         
         deleteSelectedButton = new JButton("Eliminar Figura Seleccionada");
+        deleteSelectedButton.setBounds(800, 580, 200, 30);
         deleteSelectedButton.addActionListener(e -> {
             deleteSelectedShape();
         });
-        deleteSelectedButton.setBounds(180, 530, 200, 30);
+        
         this.add(deleteSelectedButton); 
         
         deleteAllButton = new JButton("Eliminar Todas las Figuras");
+         deleteAllButton.setBounds(800, 200, 200, 30);
         deleteAllButton.addActionListener(e -> {
             deleteAllShapes();
         });
-        deleteAllButton.setBounds(400, 530, 200, 30);
+       
         this.add(deleteAllButton);
-        
         
         /* Guardar y Cargar */
         
         JButton saveButton = new JButton("Guardar Figuras");
+         saveButton.setBounds(1000, 530, 150, 30);
         saveButton.addActionListener((ActionEvent e) -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showSaveDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                controller.saveFigures(selectedFile.getAbsolutePath());
+                saveFigures(selectedFile.getAbsolutePath());
             }
         });
-        saveButton.setBounds(10, 430, 150, 30);
+       
         this.add(saveButton);
 
         JButton loadButton = new JButton("Cargar Figuras");
+        loadButton.setBounds(100, 600, 150, 30);
         loadButton.addActionListener((ActionEvent e) -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                controller.loadFigures(selectedFile.getAbsolutePath());
+                loadFigures(selectedFile.getAbsolutePath());
             }
         });
-        loadButton.setBounds(170, 430, 150, 30);
+        
         this.add(loadButton);
+        
+        // this.controller = controller;
+           
+      
+
+        JButton addCircleButton = new JButton("Add Circle");
+        addCircleButton.setBounds(200, 600, 150, 30);
+            addCircleButton.addActionListener((ActionEvent e) -> {
+                Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                addCircle(color); // Llamar al método con el color seleccionado
+                repaint();
+        });
+        
+        JButton addRectangleButton = new JButton("Add Rectangle");
+        addRectangleButton.setBounds(300, 600, 150, 30);
+        addRectangleButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                addRectangle(color); // Llamar al método con el color seleccionado
+                repaint();
+        });
+
+        JButton addSquareButton = new JButton("Add Square");
+        addSquareButton.setBounds(400, 600, 150, 30);
+        addSquareButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                addSquare(color); // Llamar al método con el color seleccionado
+                repaint();
+        });
+        
+        JButton addElipseButton = new JButton("Add Elipse");
+        addElipseButton.setBounds(500, 600, 150, 30);
+        addElipseButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+                addElipse(color); // Llamar al método con el color seleccionado
+                repaint();
+        });
+
+        // Agrupar los RadioButtons para el color
+        redRadioButton = new JRadioButton("Rojo");
+        redRadioButton.setBounds(800,300,150,30);
+        redRadioButton.setSelected(false);
+        redRadioButton.addActionListener(e -> {
+            if (redRadioButton.isSelected()) {
+                blueRadioButton.setSelected(false);
+            }
+        });
+
+        blueRadioButton = new JRadioButton("Azul");
+        blueRadioButton.setBounds(800,350,150,30);
+        blueRadioButton.setSelected(true);
+        blueRadioButton.addActionListener(e -> {
+            if (blueRadioButton.isSelected()) {
+                redRadioButton.setSelected(false);
+            }
+        });
+        
+        sizeSlider = new JSlider(50, 150, 100);
+        sizeSlider.setMajorTickSpacing(10);
+        sizeSlider.setMinorTickSpacing(5);
+        sizeSlider.setPaintTicks(true);
+        sizeSlider.setPaintLabels(true);
+        sizeSlider.addChangeListener((ChangeEvent e) -> {
+            int value = sizeSlider.getValue();
+            resizeShape(value / 100.0);
+        });
+             
+        // Agregar RadioButtons al panel
+        //JPanel radioButtonPanel = new JPanel();
+        this.add(redRadioButton);
+        this.add(blueRadioButton);
+        
+        this.add(addCircleButton);
+       this.add(addRectangleButton);
+         this.add(addSquareButton);
+         this.add(addElipseButton);
+         this.add(sizeSlider);
+       
+        // Agregar componentes al JFrame
+       // this.add(radioButtonPanel, BorderLayout.NORTH);
+     //   this.add(panel, BorderLayout.CENTER);
+
+     
     }
 
     private void deleteSelectedShape() {
@@ -199,7 +312,19 @@ public class MainPanel extends javax.swing.JPanel {
         updateSelectedLabel("Ninguna figura seleccionada");
         repaint();
     }
-    
+       private void selectImage() {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG, PNG & GIF Images", "jpg", "png", "gif");
+        fileChooser.setFileFilter(filter);
+
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            String imagePath = fileChooser.getSelectedFile().getPath();
+            ImageIcon imageIcon = new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH));
+            lblImagen.setIcon(imageIcon); // Muestra la imagen seleccionada en lblImagen
+        }
+    }
+        
     private void rotateShape() {
         if (selectedDrawable != null) {
             if (selectedDrawable instanceof Rectangle rectangle) {
@@ -323,25 +448,84 @@ public class MainPanel extends javax.swing.JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        List<Shape> shapes = drawables.getShapes();
-        for (Shape shape : shapes) {
-            if (selectedDrawable != null && selectedDrawable.equals(shape)) {
-                shape.draw(g, true); // Dibuja la figura seleccionada con una bandera
-            } else {
-                shape.draw(g, false); // Dibuja las demás figuras normalmente
-            }
-        }
+        // No dibujar figuras en el panel principal
     }
 
+    public void addCircle(Color color) {
+        DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, color);
+        drawables.addShape(circle);
+        updateUIAfterLoading();
+        //areaPercentage();
+    }
 
+    public void addRectangle(Color color) {
+        DrawableRectangle rectangle = new DrawableRectangle(new Point(150, 150), 100, 200, color);
+        drawables.addShape(rectangle);
+        updateUIAfterLoading();
+        //areaPercentage();
+    }
 
-   
+    public void addSquare(Color color) {
+        DrawableSquare square = new DrawableSquare(new Point(200, 200), 100, color);
+        drawables.addShape(square);
+        updateUIAfterLoading();
+        //areaPercentage();
+    }
+
+    public void addElipse(Color color) {
+        DrawableElipse elipse = new DrawableElipse(new Point(200, 200), 100, 50, color);
+        drawables.addShape(elipse);
+        updateUIAfterLoading();
+        //areaPercentage();
+    }
+    
+     public void saveFigures(String filename) {
+        drawables.saveToJson(filename);
+    }
+
+    public void loadFigures(String filename) {
+        drawables.loadFromJson(filename);
+        // Actualiza la interfaz de usuario después de cargar las figuras
+        updateUIAfterLoading();
+    }
+    
+    private void updateUIAfterLoading() {
+        // Aquí puedes actualizar el área y redibujar las figuras en el panel
+        String message = areaPercentage();
+
+    }
+
+    public String areaPercentage() {
+        List<Shape> shapes = drawables.getShapes();
+        areaService.updateAreas(shapes);
+        double percentage = areaService.calculatePercentage();
+        return "Area total " + percentage + "%";
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
+    private void initComponents() {
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1366, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 726, Short.MAX_VALUE)
+        );
+    }
+    
+    private void synchronizeSliders() {
+        // Implementar la sincronización de sliders si es necesario
+    }
+}
+
+    /*
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -357,11 +541,9 @@ public class MainPanel extends javax.swing.JPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+*/
 
-    private void synchronizeSliders() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-}
+
