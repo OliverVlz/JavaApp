@@ -7,10 +7,12 @@ package views;
 import DAO.DrawablesDao;
 import Drawable.Drawable;
 import controllers.MainController;
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -28,7 +30,11 @@ import models.Rectangle;  // Importa el modelo de rectángulo
 import models.Square;
 import models.Elipse;
 import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+
 
 /**
  *
@@ -44,6 +50,10 @@ public class MainPanel extends javax.swing.JPanel {
     private JButton rotateButton;
     private JButton deleteSelectedButton;
     private JButton deleteAllButton;
+    private JRadioButton redRadioButton;
+    private JRadioButton blueRadioButton;
+    private JSlider sizeSlider;
+    
     //private JRadioButton redRadioButton; // RadioButton para color rojo
     //private JRadioButton blueRadioButton; // RadioButton para color azul
     
@@ -53,60 +63,31 @@ public class MainPanel extends javax.swing.JPanel {
      */
     public MainPanel(DrawablesDao dao) {
         initComponents();
-        this.setSize(1366,726);
-        this.drawables=dao;
-        this.setLayout(null);
-        this.areaLabel = new JLabel("Area total: 0% :/");
+        this.setSize(1366, 726);
+        this.drawables = dao;
+        this.setLayout(new BorderLayout()); // Establecer el layout principal
+
+        this.areaLabel = new JLabel("Área total: 0%");
         this.areaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         this.areaLabel.setForeground(Color.BLACK);
-        this.add(areaLabel);  // Agregar el JLabel al panel
-        this.areaLabel.setBounds(20, 20, 300, 30);
-        
+        this.add(areaLabel, BorderLayout.NORTH); // Agregar el JLabel al panel en la parte superior
+
         // Etiqueta para la figura seleccionada
         this.selectedLabel = new JLabel("Figura seleccionada: Ninguna");
         this.selectedLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         this.selectedLabel.setForeground(Color.RED); // Color opcional para distinguir
-        this.add(selectedLabel);
-        this.selectedLabel.setBounds(20, 50, 300, 30);
-        
-        /*// RadioButton para color rojo
-        redRadioButton = new JRadioButton("Rojo");
-        redRadioButton.setSelected(false); // No seleccionado por defecto
-        redRadioButton.addActionListener(e -> {
-            if (redRadioButton.isSelected()) {
-                changeSelectedColor(Color.RED); // Cambiar color seleccionado a rojo
-            }
-        });
-        redRadioButton.setBounds(20, 100, 80, 30);
-        this.add(redRadioButton);
-        
-        // RadioButton para color azul (predeterminado seleccionado)
-        blueRadioButton = new JRadioButton("Azul");
-        blueRadioButton.setSelected(true); // Seleccionado por defecto
-        blueRadioButton.addActionListener(e -> {
-            if (blueRadioButton.isSelected()) {
-                changeSelectedColor(Color.BLUE); // Cambiar color seleccionado a azul
-            }
-        });
-        blueRadioButton.setBounds(120, 100, 80, 30);
-        this.add(blueRadioButton);
-        
-        // Agrupar los RadioButtons para que solo uno pueda estar seleccionado a la vez
-        ButtonGroup colorButtonGroup = new ButtonGroup();
-        colorButtonGroup.add(redRadioButton);
-        colorButtonGroup.add(blueRadioButton);*/
-        
-        
+        this.add(selectedLabel, BorderLayout.NORTH); // Agregar la etiqueta en la parte superior
+
         // Agregar listener de mouse para detectar clics
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectDrawable(e.getX(), e.getY());
+                controller.selectDrawable(e.getX(), e.getY());
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                selectDrawable(e.getX(), e.getY());
+                controller.selectDrawable(e.getX(), e.getY());
                 prevX = e.getX();
                 prevY = e.getY();
             }
@@ -129,94 +110,148 @@ public class MainPanel extends javax.swing.JPanel {
         addMouseWheelListener((MouseWheelEvent e) -> {
             if (selectedDrawable != null) {
                 double factor = (e.getWheelRotation() < 0) ? 1.1 : 0.9;
-                resizeShape(factor);
+                controller.resizeShape(factor);
                 synchronizeSliders();
             }
         });
         
+        // Panel para los botones y controles
+        JPanel controlPanel = new JPanel(null);
+        controlPanel.setLayout(null);
+        controlPanel.setPreferredSize(new java.awt.Dimension(1366, 600)); // Tamaño preferido del panel de control
+
+        // Botones y otros controles
         rotateButton = new JButton("Rotar Figura");
-           rotateButton.addActionListener(e -> {
-               rotateShape();
-               synchronizeSliders(); // Actualizar los sliders después de la rotación
-        });
         rotateButton.setBounds(20, 530, 150, 30);
-        this.add(rotateButton);
-        
+        rotateButton.addActionListener(e -> {
+            controller.rotateShape();
+            synchronizeSliders(); // Actualizar los sliders después de la rotación
+        });
+        controlPanel.add(rotateButton);
+
         deleteSelectedButton = new JButton("Eliminar Figura Seleccionada");
-        deleteSelectedButton.addActionListener(e -> {
-            deleteSelectedShape();
-        });
         deleteSelectedButton.setBounds(180, 530, 200, 30);
-        this.add(deleteSelectedButton); 
-        
-        deleteAllButton = new JButton("Eliminar Todas las Figuras");
-        deleteAllButton.addActionListener(e -> {
-            deleteAllShapes();
+        deleteSelectedButton.addActionListener(e -> {
+            controller.deleteSelectedShape();
         });
+        controlPanel.add(deleteSelectedButton);
+
+        deleteAllButton = new JButton("Eliminar Todas las Figuras");
         deleteAllButton.setBounds(400, 530, 200, 30);
-        this.add(deleteAllButton);
+        deleteAllButton.addActionListener(e -> {
+            controller.deleteAllShapes();
+        });
+        controlPanel.add(deleteAllButton);
 
-    }
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 5));
+        buttonPanel.setBounds(20, 580, 600, 100); // Ajustar según sea necesario
 
-    private void deleteSelectedShape() {
-        if (selectedDrawable != null) {
-            drawables.remove(selectedDrawable); // Elimina la figura de la lista
-            selectedDrawable = null;
-            updateSelectedLabel("Ninguna figura seleccionada");
+        JButton addCircleButton = new JButton("Add Circle");
+        addCircleButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+            controller.addCircle(color); // Llamar al método con el color seleccionado
             repaint();
-        }
-    }
-    
-    private void deleteAllShapes() {
-        drawables.clear(); // Borra todas las figuras de la lista
-        selectedDrawable = null;
-        updateSelectedLabel("Ninguna figura seleccionada");
+        });
+
+        JButton addRectangleButton = new JButton("Add Rectangle");
+        addRectangleButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+            controller.addRectangle(color); // Llamar al método con el color seleccionado
+            repaint();
+        });
+
+        JButton addSquareButton = new JButton("Add Square");
+        addSquareButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+            controller.addSquare(color); // Llamar al método con el color seleccionado
+            repaint();
+        });
+
+        JButton addElipseButton = new JButton("Add Elipse");
+        addElipseButton.addActionListener((ActionEvent e) -> {
+            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
+            controller.addElipse(color); // Llamar al método con el color seleccionado
+            repaint();
+        });
+
+        // Agrupar los RadioButtons para el color
+        redRadioButton = new JRadioButton("Rojo");
+        redRadioButton.setSelected(false);
+        redRadioButton.addActionListener(e -> {
+            if (redRadioButton.isSelected()) {
+                blueRadioButton.setSelected(false);
+            }
+        });
+
+        blueRadioButton = new JRadioButton("Azul");
+        blueRadioButton.setSelected(true);
+        blueRadioButton.addActionListener(e -> {
+            if (blueRadioButton.isSelected()) {
+                redRadioButton.setSelected(false);
+            }
+        });
+
+        sizeSlider = new JSlider(50, 150, 100);
+        sizeSlider.setMajorTickSpacing(10);
+        sizeSlider.setMinorTickSpacing(5);
+        sizeSlider.setPaintTicks(true);
+        sizeSlider.setPaintLabels(true);
+        sizeSlider.addChangeListener((ChangeEvent e) -> {
+            int value = sizeSlider.getValue();
+            controller.resizeShape(value / 100.0);
+        });
+
+        JButton saveButton = new JButton("Guardar Figuras");
+        saveButton.addActionListener((ActionEvent e) -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                controller.saveFigures(selectedFile.getAbsolutePath());
+            }
+        });
+
+        JButton loadButton = new JButton("Cargar Figuras");
+        loadButton.addActionListener((ActionEvent e) -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                controller.loadFigures(selectedFile.getAbsolutePath());
+            }
+        });
+
+        // Agregar RadioButtons al panel
+        JPanel radioButtonPanel = new JPanel();
+        radioButtonPanel.add(redRadioButton);
+        radioButtonPanel.add(blueRadioButton);
+        radioButtonPanel.setBounds(20, 100, 200, 50); // Ajustar según sea necesario
+
+        buttonPanel.add(addCircleButton);
+        buttonPanel.add(addRectangleButton);
+        buttonPanel.add(addSquareButton);
+        buttonPanel.add(addElipseButton);
+        buttonPanel.add(loadButton);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(sizeSlider);
+
+        controlPanel.add(radioButtonPanel);
+        controlPanel.add(buttonPanel);
+
+        this.add(controlPanel, BorderLayout.CENTER);
+
+        revalidate();
         repaint();
     }
-    
-    private void rotateShape() {
-        if (selectedDrawable != null) {
-            if (selectedDrawable instanceof Rectangle rectangle) {
-                int currentWidth = rectangle.getWidth();
-                int currentHeight = rectangle.getHeight();
-                rectangle.setWidth(currentHeight);
-                rectangle.setHeight(currentWidth);
-                repaint();
-            } else if (selectedDrawable instanceof Elipse elipse) {
-                int currentSemiMajorAxis = elipse.getSemiMajorAxis();
-                int currentSemiMinorAxis = elipse.getSemiMinorAxis();
-                elipse.setSemiMajorAxis(currentSemiMinorAxis);
-                elipse.setSemiMinorAxis(currentSemiMajorAxis);
-                repaint();
-            }
-        }
-    }
-    
+
+
     /**
-     * Método para seleccionar una figura según las coordenadas del clic.
-     * @param x Coordenada X del clic.
-     * @param y Coordenada Y del clic.
+     * Método para actualizar el texto de la figura seleccionada.
+     * @param text Texto a mostrar para la figura seleccionada.
      */
-    private void selectDrawable(int x, int y) {
-        List<Drawable> drawablesList = drawables.getDrawables();
-        for (Drawable drawable : drawablesList) {
-            if (drawable instanceof Shape shape) {
-                if (isPointInsideShape(x, y, shape)) {
-                    selectedDrawable = drawable;
-                    updateSelectedLabel("Seleccionado: " + shape.getId());
-                    System.out.println("ID " + shape.getId()); // Imprimir ID en consola
-                    repaint();
-                    return; // Solo seleccionamos la primera figura que encontramos
-                }
-            }
-        }
-      
-        // Si no se seleccionó ninguna figura
-        selectedDrawable = null;
-        updateSelectedLabel("Ninguna figura seleccionada");
-        repaint();
+    public void updateSelectedLabel(String text) {
+        selectedLabel.setText(text);
     }
-    
     /**
      * Método para actualizar el texto del área.
      * @param text Texto a mostrar en el área.
@@ -225,75 +260,9 @@ public class MainPanel extends javax.swing.JPanel {
         areaLabel.setText(text);
     }
     
-    /**
-     * Método para actualizar el texto de la figura seleccionada.
-     * @param text Texto a mostrar para la figura seleccionada.
-     */
-    public void updateSelectedLabel(String text) {
-        selectedLabel.setText(text);
+    public void setController(MainController controller) {
+        this.controller = controller;
     }
-    
-    /**
-     * Método para verificar si un punto (x, y) está dentro de una figura.
-     * @param x Coordenada X del punto.
-     * @param y Coordenada Y del punto.
-     * @param shape Figura a verificar.
-     * @return true si el punto está dentro de la figura, false de lo contrario.
-     */
-    private boolean isPointInsideShape(int x, int y, Shape shape) {
-        if (shape instanceof Circle) {
-            Circle circle = (Circle) shape;
-            int dx = x - circle.getStart().getX();
-            int dy = y - circle.getStart().getY();
-            return dx * dx + dy * dy <= circle.getRadius() * circle.getRadius();
-        } else if (shape instanceof Rectangle) {
-            Rectangle rectangle = (Rectangle) shape;
-            int startX = rectangle.getStart().getX();
-            int startY = rectangle.getStart().getY();
-            return x >= startX && x <= startX + rectangle.getWidth() &&
-                   y >= startY && y <= startY + rectangle.getHeight();
-        } else if (shape instanceof Square) {
-            Square square = (Square) shape;
-            int startX = square.getStart().getX();
-            int startY = square.getStart().getY();
-            return x >= startX && x <= startX + square.getSide() &&
-                   y >= startY && y <= startY + square.getSide();
-        } else if (shape instanceof Elipse) {
-            Elipse elipse = (Elipse) shape;
-            int centerX = elipse.getStart().getX();
-            int centerY = elipse.getStart().getY();
-            double dx = x - centerX;
-            double dy = y - centerY;
-            return (dx * dx) / (elipse.getSemiMajorAxis() * elipse.getSemiMajorAxis()) +
-                   (dy * dy) / (elipse.getSemiMinorAxis() * elipse.getSemiMinorAxis()) <= 1;
-        }
-        return false; // Si la figura no es reconocida, devuelve false
-    }
-
-    public void resizeShape(double factor) {
-        if (selectedDrawable != null) {
-            if (selectedDrawable instanceof Circle circle) {
-                int newRadius = (int) (circle.getRadius() * factor);
-                circle.setRadius(Math.max(10, Math.min(200, newRadius))); // Limitar el tamaño entre 10 y 200
-            } else if (selectedDrawable instanceof Rectangle rectangle) {
-                int newWidth = (int) (rectangle.getWidth() * factor);
-                int newHeight = (int) (rectangle.getHeight() * factor);
-                rectangle.setWidth(Math.max(10, Math.min(200, newWidth)));
-                rectangle.setHeight(Math.max(20, Math.min(400, newHeight)));
-            } else if (selectedDrawable instanceof Square square) {
-                int newSide = (int) (square.getSide() * factor);
-                square.setSide(Math.max(10, Math.min(200, newSide)));
-            } else if (selectedDrawable instanceof Elipse elipse) {
-                int newSemiMajorAxis = (int) (elipse.getSemiMajorAxis() * factor);
-                int newSemiMinorAxis = (int) (elipse.getSemiMinorAxis() * factor);
-                elipse.setSemiMajorAxis(Math.max(10, Math.min(200, newSemiMajorAxis)));
-                elipse.setSemiMinorAxis(Math.max(10, Math.min(200, newSemiMinorAxis)));
-            }
-            repaint();
-        }
-    }
-
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -307,8 +276,6 @@ public class MainPanel extends javax.swing.JPanel {
             }
         }
     }
-
-
 
    
     /**
