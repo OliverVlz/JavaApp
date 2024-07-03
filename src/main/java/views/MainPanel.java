@@ -138,9 +138,9 @@ public class MainPanel extends javax.swing.JPanel {
            rotateButton.addActionListener(e -> {
                rotateShape();
                synchronizeSliders(); // Actualizar los sliders después de la rotación
-           });
-           rotateButton.setBounds(20, 530, 150, 30);
-           this.add(rotateButton);
+        });
+        rotateButton.setBounds(20, 530, 150, 30);
+        this.add(rotateButton);
         
         deleteSelectedButton = new JButton("Eliminar Figura Seleccionada");
         deleteSelectedButton.addActionListener(e -> {
@@ -155,33 +155,7 @@ public class MainPanel extends javax.swing.JPanel {
         });
         deleteAllButton.setBounds(400, 530, 200, 30);
         this.add(deleteAllButton);
-        
-        
-        /* Guardar y Cargar */
-        
-        JButton saveButton = new JButton("Guardar Figuras");
-        saveButton.addActionListener((ActionEvent e) -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showSaveDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                controller.saveFigures(selectedFile.getAbsolutePath());
-            }
-        });
-        saveButton.setBounds(10, 430, 150, 30);
-        this.add(saveButton);
 
-        JButton loadButton = new JButton("Cargar Figuras");
-        loadButton.addActionListener((ActionEvent e) -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showOpenDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                controller.loadFigures(selectedFile.getAbsolutePath());
-            }
-        });
-        loadButton.setBounds(170, 430, 150, 30);
-        this.add(loadButton);
     }
 
     private void deleteSelectedShape() {

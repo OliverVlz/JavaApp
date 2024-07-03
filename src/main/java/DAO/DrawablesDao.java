@@ -31,6 +31,7 @@ public class DrawablesDao {
     public void add(Drawable drawable) {
         if (drawable instanceof Shape shape) {
             drawables.put(shape.getId(), drawable);
+            System.out.println("Figura añadida: " + shape.getId());
         }
     }
 
@@ -42,6 +43,7 @@ public class DrawablesDao {
    public void remove(Drawable drawable) {
        if (drawable instanceof Shape shape) {
            drawables.remove(shape.getId());
+           System.out.println("Figura eliminada: " + shape.getId());
        }
    }
 
@@ -114,21 +116,23 @@ public class DrawablesDao {
     public void updateDrawable(String id, Drawable updatedDrawable) {
         if (drawables.containsKey(id)) {
             drawables.put(id, updatedDrawable);
+            System.out.println("Figura actualizada: " + id);
         }
     }
     
-    public void saveToJson(String filename) {
-        List<Shape> shapes = getShapes();
-        jsonUtils.saveToJson(shapes, filename);
+   public void saveDrawablesToJson(String filename) {
+        List<Drawable> drawablesToSave = new ArrayList<>(drawables.values());
+        jsonUtils.saveToJson(drawablesToSave, filename);
     }
 
-    public void loadFromJson(String filename) {
-        List<Shape> shapes = jsonUtils.loadFromJson(filename);
-        if (shapes != null) {
+    public void loadDrawablesFromJson(String filename) {
+        List<Drawable> loadedDrawables = jsonUtils.loadFromJson(filename);
+        if (loadedDrawables != null) {
             drawables.clear();
-            for (Shape shape : shapes) {
-                drawables.put(shape.getId(), (Drawable) shape);
+            for (Drawable drawable : loadedDrawables) {
+                drawables.put((String) drawable.getId(), drawable);
             }
         }
     }
+
 }

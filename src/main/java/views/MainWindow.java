@@ -25,6 +25,8 @@ import models.Square;
 import models.Elipse;
 import models.Point;
 import controllers.MainController;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JRadioButton;
 
 /**
@@ -115,7 +117,28 @@ public class MainWindow extends JFrame {
             int value = sizeSlider.getValue();
             panel.resizeShape(value / 100.0);
         });
-             
+        
+        JButton saveButton = new JButton("Guardar Figuras");
+        saveButton.addActionListener((ActionEvent e) -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                controller.saveFigures(selectedFile.getAbsolutePath());
+            }
+        });
+
+        JButton loadButton = new JButton("Cargar Figuras");
+        loadButton.addActionListener((ActionEvent e) -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                controller.loadFigures(selectedFile.getAbsolutePath());
+            }
+        });
+        
+                
         // Agregar RadioButtons al panel
         JPanel radioButtonPanel = new JPanel();
         radioButtonPanel.add(redRadioButton);
@@ -125,6 +148,9 @@ public class MainWindow extends JFrame {
         buttonPanel.add(addRectangleButton);
         buttonPanel.add(addSquareButton);
         buttonPanel.add(addElipseButton);
+        buttonPanel.add(loadButton);
+        buttonPanel.add(saveButton);
+        
         buttonPanel.add(sizeSlider);
        
         // Agregar componentes al JFrame

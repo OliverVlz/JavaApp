@@ -79,11 +79,11 @@ public class MainController {
     }
     
      public void saveFigures(String filename) {
-        drawables.saveToJson(filename);
+        drawables.saveDrawablesToJson(filename);
     }
 
     public void loadFigures(String filename) {
-        drawables.loadFromJson(filename);
+        drawables.loadDrawablesFromJson(filename);
         // Actualiza la interfaz de usuario después de cargar las figuras
         updateUIAfterLoading();
     }

@@ -24,23 +24,24 @@ public class JsonUtils {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    public void saveToJson(List<Shape> shapes, String filename) {
+    public void saveToJson(List<Drawable> drawables, String filename) {
         try (FileWriter writer = new FileWriter(filename)) {
-            gson.toJson(shapes, writer);
-            logger.log(Level.INFO, "Figuras guardadas en {0}", filename); // Debugging line
+            gson.toJson(drawables, writer);
+            logger.log(Level.INFO, "Figuras guardadas en {0}", filename); // Línea de depuración
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error guardando figuras en " + filename, e);
         }
     }
 
-    public List<Shape> loadFromJson(String filename) {
-        List<Shape> shapes = null;
+    public List<Drawable> loadFromJson(String filename) {
+        List<Drawable> drawables = null;
         try (FileReader reader = new FileReader(filename)) {
-            shapes = gson.fromJson(reader, new TypeToken<List<Shape>>() {}.getType());
-            logger.log(Level.INFO, "Figuras cargadas desde {0}", filename); // Debugging line
+            Type listType = new TypeToken<List<Drawable>>() {}.getType();
+            drawables = gson.fromJson(reader, listType);
+            logger.log(Level.INFO, "Figuras cargadas desde {0}", filename); // Línea de depuración
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error cargando figuras desde " + filename, e);
         }
-        return shapes;
+        return drawables;
     }
 }

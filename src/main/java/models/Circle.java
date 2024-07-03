@@ -1,5 +1,6 @@
 package models;
 
+import com.google.gson.annotations.SerializedName;
 import java.awt.Color;
 import java.awt.Graphics;
 /**
@@ -7,13 +8,20 @@ import java.awt.Graphics;
  * @author ESTUDIANTE-2021
  */
 public class Circle extends Shape{
-    int radius;
+    private int radius;
+    
 
+    
     public Circle(Point start, int radius, Color color) {
         super(start, color);
         this.radius = radius;
     }
     
+     // Constructor sin argumentos para Gson (puede ser privado)
+    private Circle() {
+        super(null, null); // Valores por defecto, ajusta según necesidad
+        this.radius = 0; // Valores por defecto, ajusta según necesidad
+    }
     public int getRadius() {
         return radius;
     }
@@ -37,6 +45,17 @@ public class Circle extends Shape{
         return dx * dx + dy * dy <= radius * radius;
     }
     
+    // Gson utilizará esta anotación para mapear el nombre del campo en JSON
+    @SerializedName("radius")
+    public int getSerializedRadius() {
+        return radius;
+    }
+
+    // Gson utilizará esta anotación para mapear el nombre del campo en JSON
+    @SerializedName("radius")
+    public void setSerializedRadius(int radius) {
+        this.radius = radius;
+    }
     /**
      *
      * @param g
