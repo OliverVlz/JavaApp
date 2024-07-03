@@ -1,36 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package views;
 
-import DAO.DrawablesDao;
-import Drawable.Drawable;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Color;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
 
-
-import models.Circle;  // Importa el modelo de círculo
-import models.Rectangle;  // Importa el modelo de rectángulo
-import models.Square;
-import models.Elipse;
-import models.Point;
-import controllers.MainController;
-import javax.swing.JRadioButton;
-
-/**
- *
- * @author ESTUDIANTE
- */
 public class MainWindow extends JFrame {
     private MainPanel panel;
   
@@ -38,15 +10,10 @@ public class MainWindow extends JFrame {
         initComponents();
         setSize(1366, 726);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+        setLocationRelativeTo(null);
+  }
         
-     
-       
-    }
-
-  
-    
-     private void initComponents() {
+    private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
