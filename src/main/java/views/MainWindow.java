@@ -41,125 +41,28 @@ public class MainWindow extends JFrame {
     private JRadioButton redRadioButton;
     private JRadioButton blueRadioButton;
     private JSlider sizeSlider;
-    /**
-     * Creates new form MainWindow
-     */
+
     public MainWindow() {
         initComponents();
         this.setLayout(new BorderLayout());
         this.drawablesDao = new DrawablesDao();
+        this.setSize(1366, 726); // Tamaño inicial del JFrame
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true); // Hacer visible la ventana
     }
 
-  
     public MainPanel getPanel() {
         return panel;
     }
 
-    public void setPanel(DrawablesDao drawables, MainController controller){
+    public void setPanel(DrawablesDao drawables, MainController controller) {
         this.drawablesDao = drawables;
         this.controller = controller;
         panel = new MainPanel(drawables);
         this.add(panel, BorderLayout.CENTER);
-        
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 5));
-
-        JButton addCircleButton = new JButton("Add Circle");
-            addCircleButton.addActionListener((ActionEvent e) -> {
-                Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
-                controller.addCircle(color); // Llamar al método con el color seleccionado
-                panel.repaint();
-        });
-
-        JButton addRectangleButton = new JButton("Add Rectangle");
-        addRectangleButton.addActionListener((ActionEvent e) -> {
-            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
-                controller.addRectangle(color); // Llamar al método con el color seleccionado
-                panel.repaint();
-        });
-
-        JButton addSquareButton = new JButton("Add Square");
-        addSquareButton.addActionListener((ActionEvent e) -> {
-            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
-                controller.addSquare(color); // Llamar al método con el color seleccionado
-                panel.repaint();
-        });
-        
-        JButton addElipseButton = new JButton("Add Elipse");
-        addElipseButton.addActionListener((ActionEvent e) -> {
-            Color color = blueRadioButton.isSelected() ? Color.BLUE : Color.RED; // Obtener el color seleccionado
-                controller.addElipse(color); // Llamar al método con el color seleccionado
-                panel.repaint();
-        });
-
-        // Agrupar los RadioButtons para el color
-        redRadioButton = new JRadioButton("Rojo");
-        redRadioButton.setSelected(false);
-        redRadioButton.addActionListener(e -> {
-            if (redRadioButton.isSelected()) {
-                blueRadioButton.setSelected(false);
-            }
-        });
-
-        blueRadioButton = new JRadioButton("Azul");
-        blueRadioButton.setSelected(true);
-        blueRadioButton.addActionListener(e -> {
-            if (blueRadioButton.isSelected()) {
-                redRadioButton.setSelected(false);
-            }
-        });
-        
-        sizeSlider = new JSlider(50, 150, 100);
-        sizeSlider.setMajorTickSpacing(10);
-        sizeSlider.setMinorTickSpacing(5);
-        sizeSlider.setPaintTicks(true);
-        sizeSlider.setPaintLabels(true);
-        sizeSlider.addChangeListener((ChangeEvent e) -> {
-            int value = sizeSlider.getValue();
-            panel.resizeShape(value / 100.0);
-        });
-        
-        JButton saveButton = new JButton("Guardar Figuras");
-        saveButton.addActionListener((ActionEvent e) -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showSaveDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                controller.saveFigures(selectedFile.getAbsolutePath());
-            }
-        });
-
-        JButton loadButton = new JButton("Cargar Figuras");
-        loadButton.addActionListener((ActionEvent e) -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showOpenDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                controller.loadFigures(selectedFile.getAbsolutePath());
-            }
-        });
-        
-                
-        // Agregar RadioButtons al panel
-        JPanel radioButtonPanel = new JPanel();
-        radioButtonPanel.add(redRadioButton);
-        radioButtonPanel.add(blueRadioButton);
-        
-        buttonPanel.add(addCircleButton);
-        buttonPanel.add(addRectangleButton);
-        buttonPanel.add(addSquareButton);
-        buttonPanel.add(addElipseButton);
-        buttonPanel.add(loadButton);
-        buttonPanel.add(saveButton);
-        
-        buttonPanel.add(sizeSlider);
-       
-        // Agregar componentes al JFrame
-        this.add(buttonPanel, BorderLayout.SOUTH);
-        this.add(radioButtonPanel, BorderLayout.NORTH);
-        this.add(panel, BorderLayout.CENTER);
-
-        this.setSize(1366, 726); // Tamaño inicial del JFrame
-        this.setVisible(true); // Hacer visible la ventana
+        panel.setController(controller); // Asegúrate de que el panel tenga acceso al controlador
+        revalidate();
+        repaint();
     }
     /**
      * This method is called from within the constructor to initialize the form.
