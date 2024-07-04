@@ -56,7 +56,12 @@ public class Rectangle extends Shape {
 
         return insideX && insideY;
     }   
-
+    
+    @Override
+    public String getType() {
+        return "Rectangle";
+    }
+    
     /**
      *
      * @param g

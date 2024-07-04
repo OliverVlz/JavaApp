@@ -5,8 +5,8 @@ import models.Shape;
 import java.util.List;
 
 public class AreaCalculator {
-    private double areaAzules = 0;
-    private double areaRojos = 0;
+    double areaAzules = 0;
+    double areaRojos = 0;
 
     public void updateAreas(List<Shape> shapes) {
         areaAzules = 0;

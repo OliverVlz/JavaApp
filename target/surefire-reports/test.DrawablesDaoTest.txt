@@ -1,0 +1,13 @@
+-------------------------------------------------------------------------------
+Test set: test.DrawablesDaoTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.291 s <<< FAILURE! -- in test.DrawablesDaoTest
+test.DrawablesDaoTest.testSerializationDeserialization -- Time elapsed: 0.238 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.google.gson.JsonSerializationContext.serialize(Object)" because "context" is null
+	at serialization.ShapeAdapter.serialize(ShapeAdapter.java:25)
+	at DAO.DrawablesDao.addShape(DrawablesDao.java:149)
+	at test.DrawablesDaoTest.testSerializationDeserialization(DrawablesDaoTest.java:32)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+

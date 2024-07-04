@@ -2,26 +2,30 @@ package utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import models.Shape;
+
+import java.awt.Color;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
-import Drawable.Drawable;
-import models.Shape;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import models.Point;
 
 public class JsonUtils {
 
-    private final Gson gson;
-    private static final Logger logger = Logger.getLogger(JsonUtils.class.getName());
+    Gson gson;
+    Logger logger = Logger.getLogger(JsonUtils.class.getName());
 
     public JsonUtils() {
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(Shape.class, new ShapeAdapter())
+                .registerTypeAdapter(Color.class, new ColorAdapter())
+                .setPrettyPrinting()
+                .create();
     }
 
     public void saveToJson(List<Shape> shapes, String filename) {
@@ -42,5 +46,9 @@ public class JsonUtils {
             logger.log(Level.SEVERE, "Error cargando figuras desde " + filename, e);
         }
         return shapes;
+    }
+
+    public JsonElement serialize(Point start) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

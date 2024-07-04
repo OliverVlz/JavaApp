@@ -65,6 +65,11 @@ public class Elipse extends Shape {
         return value <= 1;
     }
     
+    @Override
+    public String getType() {
+        return "Elipse";
+    }
+    
     /**
      *
      * @param g

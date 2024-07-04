@@ -13,9 +13,9 @@ import java.util.UUID;
  * @author ESTUDIANTE
  */
 public abstract class Shape {
-    private final String id;
+    String id;
     Point start;
-    protected Color color;
+    Color color;
 
     public Shape(Point start, Color color) {
         this.id = UUID.randomUUID().toString();
@@ -53,5 +53,7 @@ public abstract class Shape {
         this.start.setX(this.start.getX() + deltaX);
         this.start.setY(this.start.getY() + deltaY);
     }
-
+    
+    // Método abstracto para obtener el tipo de figura
+    public abstract String getType();
 }

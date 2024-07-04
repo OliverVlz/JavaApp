@@ -44,6 +44,10 @@ public class Square extends Shape{
                y >= startY && y <= startY + side;
     }
     
+    @Override
+    public String getType() {
+        return "Square";
+    }
     /**
      *
      * @param g
@@ -53,5 +57,5 @@ public class Square extends Shape{
     public void draw(Graphics g, boolean selected) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-   
+    
 }

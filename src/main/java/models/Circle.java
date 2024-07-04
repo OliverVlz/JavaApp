@@ -46,5 +46,10 @@ public class Circle extends Shape{
     public void draw(Graphics g, boolean selected) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    @Override
+    public String getType() {
+        return "Circle";
+    }
    
 }
