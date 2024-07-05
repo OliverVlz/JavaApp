@@ -10,7 +10,7 @@ public class Circle extends Shape{
     int radius;
 
     public Circle(Point start, int radius, Color color) {
-        super(start, color);
+        super(start, color, "Circle");
         this.radius = radius;
     }
     
@@ -36,7 +36,7 @@ public class Circle extends Shape{
         int dy = point.getY() - getStart().getY();
         return dx * dx + dy * dy <= radius * radius;
     }
-    
+
     /**
      *
      * @param g

@@ -16,11 +16,13 @@ public abstract class Shape {
     private final String id;
     Point start;
     protected Color color;
+    String type;
 
-    public Shape(Point start, Color color) {
+    public Shape(Point start, Color color, String type) {
         this.id = UUID.randomUUID().toString();
         this.start = start;
         this.color = color;
+        this.type = type;
     }
     
     public String getId() {
@@ -43,11 +45,14 @@ public abstract class Shape {
         this.color = color;
     }
     
+    public String getType() {
+        return type;
+    }
     public abstract double area();
 
      // Método abstracto para dibujar la figura
     public abstract void draw(Graphics g, boolean selected);
-
+    
     // Implementación del método move para actualizar las coordenadas
     public void move(int deltaX, int deltaY) {
         this.start.setX(this.start.getX() + deltaX);

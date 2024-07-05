@@ -10,7 +10,7 @@ public class Square extends Shape{
     int side;
 
     public Square(Point start, int side, Color color) {
-        super(start, color);
+        super(start, color, "Square");
         this.side = side;
     }
         
@@ -31,6 +31,12 @@ public class Square extends Shape{
         return side * side;
     }
 
+    
+    @Override
+    public String getType() {
+        return "Square";
+    }
+    
     public boolean isPointInsideShape(Point point) {
         int x = point.getX();
         int y = point.getY();

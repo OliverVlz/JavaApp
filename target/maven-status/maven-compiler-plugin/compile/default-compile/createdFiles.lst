@@ -3,6 +3,7 @@ utils\JsonUtils$1.class
 controllers\CustomGson.class
 views\MainPanel$4.class
 utils\JsonUtils.class
+utils\PointAdapter.class
 views\MainPanel$2.class
 Drawable\DrawableElipse.class
 Drawable\DrawableSquare.class

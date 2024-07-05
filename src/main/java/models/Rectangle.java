@@ -14,7 +14,7 @@ public class Rectangle extends Shape {
     int width,height;
 
     public Rectangle(Point start, int width, int height, Color color) {
-        super(start, color);
+        super(start, color, "Rectangle");
         this.width = width;
         this.height = height;
     }
@@ -42,6 +42,12 @@ public class Rectangle extends Shape {
     @Override
     public double area() {
         return width * height;
+    }
+    
+        
+    @Override
+    public String getType() {
+        return "Rectangle";
     }
     
     public boolean isPointInsideShape(Point point) {

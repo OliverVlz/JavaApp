@@ -12,7 +12,7 @@ public class Elipse extends Shape {
     int semiMinorAxis;  // Eje menor
 
     public Elipse(Point start, int semiMajorAxis, int semiMinorAxis, Color color) {
-        super(start, color);
+        super(start, color, "Elipse");
         this.semiMajorAxis = semiMajorAxis;
         this.semiMinorAxis = semiMinorAxis;
     }
@@ -50,6 +50,11 @@ public class Elipse extends Shape {
         return Math.PI * semiMajorAxis * semiMinorAxis;
     }
 
+        
+    @Override
+    public String getType() {
+        return "Elipse";
+    }
      /**
      * Verifica si un punto está dentro de la elipse.
      * @param point El punto a verificar.
