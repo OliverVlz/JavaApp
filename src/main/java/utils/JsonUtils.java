@@ -32,7 +32,7 @@ public class JsonUtils {
     public void saveToJson(List<Shape> shapes, String filename) {
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(shapes, writer);
-            logger.log(Level.INFO, "Figuras guardadas en {0}", filename);
+            logger.log(Level.INFO, "Figuras guardadas en {0}" + shapes +"", filename);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error guardando figuras en " + filename, e);
         }
@@ -41,6 +41,7 @@ public class JsonUtils {
     public List<Shape> loadFromJson(String filename) {
         try (FileReader reader = new FileReader(filename)) {
             Type shapeListType = new TypeToken<List<Shape>>() {}.getType();
+            logger.log(Level.INFO, "Figurasasdasda" + shapeListType +"", filename);
             return gson.fromJson(reader, shapeListType);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error cargando figuras desde " + filename, e);

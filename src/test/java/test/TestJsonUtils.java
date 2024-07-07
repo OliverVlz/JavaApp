@@ -30,7 +30,9 @@ public class TestJsonUtils {
         if (loadedShapes != null) {
             for (Shape shape : loadedShapes) {
                 if (shape != null) {
-                    System.out.println("ID: " + shape.getId() + ", Posición: (" + shape.getStart().getX() + ", " + shape.getStart().getY() + "), Color: " + shape.getColor());
+                    System.out.println("ID: " + shape.getId() + ", Posición: (" + shape.getStart().getX() + ", " + shape.getStart().getY() + ")," + shape + " Color: " + shape.getColor());
+                    //Salida de prueba serializacion DAO ID: 388fdae6-078a-4626-b23e-ac3c95c088af, Posici�n: (150, 150),Drawable.DrawableRectangle@2405f0ce Color: java.awt.Color[r=255,g=0,b=0]
+                    //Salida de prueba TESTJSONUTILS ID: a197b2e6-6822-442f-9f9b-d739312b3a1d, Posici�n: (50, 50),models.Rectangle@6d78f375 Color: java.awt.Color[r=0,g=0,b=255]
                 } else {
                     System.out.println("Shape is null");
                 }

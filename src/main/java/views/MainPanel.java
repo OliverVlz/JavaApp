@@ -329,7 +329,7 @@ public class MainPanel extends javax.swing.JPanel {
                     if (isPointInsideShape(x, y, shape)) {
                         selectedDrawable = drawable;
                         updateSelectedLabel("Seleccionado: " + shape.getId());
-                        System.out.println("ID " + shape.getId()); // Imprimir ID en consola
+                        System.out.println("ID: " + shape.getId() + ", Posición: (" + shape.getStart().getX() + ", " + shape.getStart().getY() + ")," + drawable + " Color: " + shape.getColor()); // Imprimir ID en consola
                         repaint();
                         return; // Solo seleccionamos la primera figura que encontramos
                     }
@@ -379,19 +379,23 @@ public class MainPanel extends javax.swing.JPanel {
                 if (selectedDrawable instanceof Circle circle) {
                     int newRadius = (int) (circle.getRadius() * factor);
                     circle.setRadius(Math.max(10, Math.min(200, newRadius))); // Limitar el tamaño entre 10 y 200
+                    areaPercentage();
                 } else if (selectedDrawable instanceof Rectangle rectangle) {
                     int newWidth = (int) (rectangle.getWidth() * factor);
                     int newHeight = (int) (rectangle.getHeight() * factor);
                     rectangle.setWidth(Math.max(10, Math.min(200, newWidth)));
                     rectangle.setHeight(Math.max(20, Math.min(400, newHeight)));
+                    areaPercentage();
                 } else if (selectedDrawable instanceof Square square) {
                     int newSide = (int) (square.getSide() * factor);
                     square.setSide(Math.max(10, Math.min(200, newSide)));
+                    areaPercentage();
                 } else if (selectedDrawable instanceof Elipse elipse) {
                     int newSemiMajorAxis = (int) (elipse.getSemiMajorAxis() * factor);
                     int newSemiMinorAxis = (int) (elipse.getSemiMinorAxis() * factor);
                     elipse.setSemiMajorAxis(Math.max(10, Math.min(200, newSemiMajorAxis)));
                     elipse.setSemiMinorAxis(Math.max(10, Math.min(200, newSemiMinorAxis)));
+                    areaPercentage();
                 }
                 repaint();
             }
