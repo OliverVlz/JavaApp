@@ -119,7 +119,7 @@ public class MainPanel extends javax.swing.JPanel {
         redRadioButton = new JRadioButton("Red");  
         blueRadioButton = new JRadioButton("Blue");
         sizeSlider = new JSlider(50, 150, 100);
-        guardarevaluacion = new JButton(" guardar evaluacion");
+        guardarevaluacion = new JButton("Save Evaluation");
         
         //posicion de label
         this.areaLabel.setBounds(20, 20, 300, 30);
