@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "DrawingExample",
+      "request": "launch",
+      "mainClass": "DrawingExample",
+      "projectName": "Vectors"
+    },
+    {
+      "type": "java",
+      "name": "MainWindow",
+      "request": "launch",
+      "mainClass": "views.MainWindow",
+      "projectName": "Vectors"
+    },
+    {
+      "type": "java",
+      "name": "Launch DrawingExample",
+      "request": "launch",
+      "mainClass": "DrawingExample",
+      "projectName": "proyecto-java"
+    }
+  ]
+}
