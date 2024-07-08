@@ -1,20 +1,21 @@
 
 package controllers;
 
-import views.MainWindow;
+import views.Login;
+
 
 
 
 public class MainController {
    
-    private  MainWindow window;
-  
-    
+   
+    private Login login;
+        
     public MainController() {
-       window = new MainWindow();   
+       login = new Login();   
     }
     
     public void start(){
-        window.setVisible(true);
+        login.setVisible(true);
     }
 }

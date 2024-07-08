@@ -32,7 +32,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import models.AreaEvaluada;
 import models.Point;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import services.AreaCalculator;
 
 
@@ -67,7 +74,9 @@ public class MainPanel extends javax.swing.JPanel {
     private JButton addRectangleButton;
     private JButton addElipseButton;
     private JButton addSquareButton;
-    
+    private JButton guardarevaluacion;
+    //guardarevaluciacon
+    public double percentage;
     //constructor
     public MainPanel() {
         
@@ -110,6 +119,7 @@ public class MainPanel extends javax.swing.JPanel {
         redRadioButton = new JRadioButton("Red");  
         blueRadioButton = new JRadioButton("Blue");
         sizeSlider = new JSlider(50, 150, 100);
+        guardarevaluacion = new JButton(" guardar evaluacion");
         
         //posicion de label
         this.areaLabel.setBounds(20, 20, 300, 30);
@@ -131,6 +141,7 @@ public class MainPanel extends javax.swing.JPanel {
         redRadioButton.setBounds(930,160,100,30);       
         blueRadioButton.setBounds(1060,160,100,30);
         sizeSlider.setBounds(910,370,270,50);
+        guardarevaluacion.setBounds(945, 500, 200, 30);
        
         //eventos button
         selectImageButton.addActionListener(new ActionListener() {
@@ -200,6 +211,30 @@ public class MainPanel extends javax.swing.JPanel {
             int value = sizeSlider.getValue();
             resizeShape(value / 100.0);             
         });
+        guardarevaluacion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            
+        AreaEvaluada areasEvaluadas = new AreaEvaluada();
+        areasEvaluadas.setId_area_evaluada(1);        
+        areasEvaluadas.setId_area(1);
+        areasEvaluadas.setId_evaluador(1);
+        areasEvaluadas.setPorcentaje_bosque(percentage);
+        areasEvaluadas.setEstado("evaluado");
+        
+        
+        
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/areaevaluada"; 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        
+        
+        HttpEntity<AreaEvaluada> request = new HttpEntity<>(areasEvaluadas, headers);
+        ResponseEntity<String> response= restTemplate.exchange(url,HttpMethod.POST,request,String.class);
+            }
+        });
+    
              
          //eventos mouse
         addMouseListener(new MouseAdapter() {
@@ -274,7 +309,8 @@ public class MainPanel extends javax.swing.JPanel {
         this.add(addRectangleButton);
         this.add(addSquareButton);
         this.add(addElipseButton);
-        this.add(sizeSlider);          
+        this.add(sizeSlider);      
+        this.add(guardarevaluacion);
     }
     
         //metodos    
@@ -323,22 +359,22 @@ public class MainPanel extends javax.swing.JPanel {
               }
         }   
         private void selectDrawable(int x, int y) {
-             List<Drawable> drawablesList = drawables.getDrawables();
-             for (Drawable drawable : drawablesList) {
-                if (drawable instanceof Shape shape) {
-                    if (isPointInsideShape(x, y, shape)) {
-                        selectedDrawable = drawable;
-                        updateSelectedLabel("Seleccionado: " + shape.getId());
-                        System.out.println("ID " + shape.getId()); // Imprimir ID en consola
-                        repaint();
-                        return; // Solo seleccionamos la primera figura que encontramos
-                    }
-                }
+    List<Drawable> drawablesList = drawables.getDrawables();
+    for (Drawable drawable : drawablesList) {
+        if (drawable instanceof Shape shape) {
+            if (isPointInsideShape(x, y, shape)) {
+                selectedDrawable = drawable;
+                updateSelectedLabel("Seleccionado: " + shape.getId());
+                System.out.println("ID " + shape.getId()); // Imprimir ID en consola
+                repaint();
+                return; // Solo seleccionamos la primera figura que encontramos
             }
-                  selectedDrawable = null;
-                  updateSelectedLabel("Ninguna figura seleccionada");
-                  repaint();
-        }    
+        }
+    }
+    selectedDrawable = null;
+    updateSelectedLabel("Ninguna figura seleccionada");
+    repaint();
+}
         public void updateAreaLabel(String text) {
             areaLabel.setText(text);
         }    
@@ -346,56 +382,75 @@ public class MainPanel extends javax.swing.JPanel {
             selectedLabel.setText(text);
         }    
         private boolean isPointInsideShape(int x, int y, Shape shape) {
-            if (shape instanceof Circle) {
-                Circle circle = (Circle) shape;
-                int dx = x - circle.getStart().getX();
-                int dy = y - circle.getStart().getY();
-                return dx * dx + dy * dy <= circle.getRadius() * circle.getRadius();
-            } else if (shape instanceof Rectangle) {
-                Rectangle rectangle = (Rectangle) shape;
-                int startX = rectangle.getStart().getX();
-                int startY = rectangle.getStart().getY();
-                return x >= startX && x <= startX + rectangle.getWidth() &&
-                       y >= startY && y <= startY + rectangle.getHeight();
-            } else if (shape instanceof Square) {
-                Square square = (Square) shape;
-                int startX = square.getStart().getX();
-                int startY = square.getStart().getY();
-                return x >= startX && x <= startX + square.getSide() &&
-                       y >= startY && y <= startY + square.getSide();
-            } else if (shape instanceof Elipse) {
-                Elipse elipse = (Elipse) shape;
-                int centerX = elipse.getStart().getX();
-                int centerY = elipse.getStart().getY();
-                double dx = x - centerX;
-                double dy = y - centerY;
-                return (dx * dx) / (elipse.getSemiMajorAxis() * elipse.getSemiMajorAxis()) +
-                       (dy * dy) / (elipse.getSemiMinorAxis() * elipse.getSemiMinorAxis()) <= 1;
-            }
-            return false; // Si la figura no es reconocida, devuelve false
-        }
+    if (shape instanceof Circle) {
+        Circle circle = (Circle) shape;
+        int centerX = circle.getStart().getX();
+        int centerY = circle.getStart().getY();
+        int radius = circle.getRadius();
+        
+        // Calcula la distancia al cuadrado desde el punto dado al centro del círculo
+        double distanceSquared = Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2);
+        
+        // Compara con el radio al cuadrado para determinar si está dentro o en el borde
+        return distanceSquared <= Math.pow(radius, 2);
+        
+    } else if (shape instanceof Rectangle) {
+        Rectangle rectangle = (Rectangle) shape;
+        int startX = rectangle.getStart().getX();
+        int startY = rectangle.getStart().getY();
+        return x >= startX && x <= startX + rectangle.getWidth() &&
+               y >= startY && y <= startY + rectangle.getHeight();
+        
+    } else if (shape instanceof Square) {
+        Square square = (Square) shape;
+        int startX = square.getStart().getX();
+        int startY = square.getStart().getY();
+        return x >= startX && x <= startX + square.getSide() &&
+               y >= startY && y <= startY + square.getSide();
+        
+    } else if (shape instanceof Elipse) {
+        Elipse elipse = (Elipse) shape;
+        int centerX = elipse.getStart().getX();
+        int centerY = elipse.getStart().getY();
+        int semiMajorAxis = elipse.getSemiMajorAxis();
+        int semiMinorAxis = elipse.getSemiMinorAxis();
+        
+        // Calcula la distancia normalizada al centro de la elipse
+        double dx = (x - centerX) * 1.0 / semiMajorAxis;
+        double dy = (y - centerY) * 1.0 / semiMinorAxis;
+        
+        // Compara con la ecuación de la elipse normalizada: (dx^2 + dy^2) <= 1
+        return (dx * dx) + (dy * dy) <= 1;
+    }
+    
+    return false; // Si la figura no es reconocida, devuelve false
+}
         public void resizeShape(double factor) {
-            if (selectedDrawable != null) {
-                if (selectedDrawable instanceof Circle circle) {
-                    int newRadius = (int) (circle.getRadius() * factor);
-                    circle.setRadius(Math.max(10, Math.min(200, newRadius))); // Limitar el tamaño entre 10 y 200
-                } else if (selectedDrawable instanceof Rectangle rectangle) {
-                    int newWidth = (int) (rectangle.getWidth() * factor);
-                    int newHeight = (int) (rectangle.getHeight() * factor);
-                    rectangle.setWidth(Math.max(10, Math.min(200, newWidth)));
-                    rectangle.setHeight(Math.max(20, Math.min(400, newHeight)));
-                } else if (selectedDrawable instanceof Square square) {
-                    int newSide = (int) (square.getSide() * factor);
-                    square.setSide(Math.max(10, Math.min(200, newSide)));
-                } else if (selectedDrawable instanceof Elipse elipse) {
-                    int newSemiMajorAxis = (int) (elipse.getSemiMajorAxis() * factor);
-                    int newSemiMinorAxis = (int) (elipse.getSemiMinorAxis() * factor);
-                    elipse.setSemiMajorAxis(Math.max(10, Math.min(200, newSemiMajorAxis)));
-                    elipse.setSemiMinorAxis(Math.max(10, Math.min(200, newSemiMinorAxis)));
-                }
-                repaint();
-            }
-        }       
+    if (selectedDrawable != null) {
+        if (selectedDrawable instanceof Circle) {
+            Circle circle = (Circle) selectedDrawable;
+            int newRadius = (int) (circle.getRadius() * factor);
+            circle.setRadius(Math.max(10, Math.min(200, newRadius))); // Limitar el tamaño entre 10 y 200
+        } else if (selectedDrawable instanceof Rectangle) {
+            Rectangle rectangle = (Rectangle) selectedDrawable;
+            int newWidth = (int) (rectangle.getWidth() * factor);
+            int newHeight = (int) (rectangle.getHeight() * factor);
+            rectangle.setWidth(Math.max(10, Math.min(200, newWidth)));
+            rectangle.setHeight(Math.max(20, Math.min(400, newHeight)));
+        } else if (selectedDrawable instanceof Square) {
+            Square square = (Square) selectedDrawable;
+            int newSide = (int) (square.getSide() * factor);
+            square.setSide(Math.max(10, Math.min(200, newSide)));
+        } else if (selectedDrawable instanceof Elipse) {
+            Elipse elipse = (Elipse) selectedDrawable;
+            int newSemiMajorAxis = (int) (elipse.getSemiMajorAxis() * factor);
+            int newSemiMinorAxis = (int) (elipse.getSemiMinorAxis() * factor);
+            elipse.setSemiMajorAxis(Math.max(10, Math.min(200, newSemiMajorAxis)));
+            elipse.setSemiMinorAxis(Math.max(10, Math.min(200, newSemiMinorAxis)));
+        }
+        repaint(); // Vuelve a dibujar la figura con el nuevo tamaño
+    }
+}
         public void addCircle(Color color) {
             DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, color);
             drawables.addShape(circle);
@@ -428,7 +483,7 @@ public class MainPanel extends javax.swing.JPanel {
         private void areaPercentage() {
         List<Shape> shapes = drawables.getShapes();
         areaService.updateAreas(shapes);
-        double percentage = areaService.calculatePercentage();
+        percentage = areaService.calculatePercentage();
 
         String message = "Area total " + percentage + "%";
         System.out.println(message); // Imprime en la consola
