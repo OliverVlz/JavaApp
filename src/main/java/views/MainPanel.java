@@ -426,31 +426,31 @@ public class MainPanel extends javax.swing.JPanel {
     return false; // Si la figura no es reconocida, devuelve false
 }
         public void resizeShape(double factor) {
-    if (selectedDrawable != null) {
-        if (selectedDrawable instanceof Circle) {
-            Circle circle = (Circle) selectedDrawable;
-            int newRadius = (int) (circle.getRadius() * factor);
-            circle.setRadius(Math.max(10, Math.min(200, newRadius))); // Limitar el tamaño entre 10 y 200
-        } else if (selectedDrawable instanceof Rectangle) {
-            Rectangle rectangle = (Rectangle) selectedDrawable;
-            int newWidth = (int) (rectangle.getWidth() * factor);
-            int newHeight = (int) (rectangle.getHeight() * factor);
-            rectangle.setWidth(Math.max(10, Math.min(200, newWidth)));
-            rectangle.setHeight(Math.max(20, Math.min(400, newHeight)));
-        } else if (selectedDrawable instanceof Square) {
-            Square square = (Square) selectedDrawable;
-            int newSide = (int) (square.getSide() * factor);
-            square.setSide(Math.max(10, Math.min(200, newSide)));
-        } else if (selectedDrawable instanceof Elipse) {
-            Elipse elipse = (Elipse) selectedDrawable;
-            int newSemiMajorAxis = (int) (elipse.getSemiMajorAxis() * factor);
-            int newSemiMinorAxis = (int) (elipse.getSemiMinorAxis() * factor);
-            elipse.setSemiMajorAxis(Math.max(10, Math.min(200, newSemiMajorAxis)));
-            elipse.setSemiMinorAxis(Math.max(10, Math.min(200, newSemiMinorAxis)));
-        }
-        repaint(); // Vuelve a dibujar la figura con el nuevo tamaño
-    }
-}
+            if (selectedDrawable != null) {
+                if (selectedDrawable instanceof Circle circle) {
+                    int newRadius = (int) (circle.getRadius() * factor);
+                    circle.setRadius(Math.max(10, Math.min(200, newRadius))); // Limitar el tamaño entre 10 y 200
+                    areaPercentage();
+                } else if (selectedDrawable instanceof Rectangle rectangle) {
+                    int newWidth = (int) (rectangle.getWidth() * factor);
+                    int newHeight = (int) (rectangle.getHeight() * factor);
+                    rectangle.setWidth(Math.max(10, Math.min(200, newWidth)));
+                    rectangle.setHeight(Math.max(20, Math.min(400, newHeight)));
+                    areaPercentage();
+                } else if (selectedDrawable instanceof Square square) {
+                    int newSide = (int) (square.getSide() * factor);
+                    square.setSide(Math.max(10, Math.min(200, newSide)));
+                    areaPercentage();
+                } else if (selectedDrawable instanceof Elipse elipse) {
+                    int newSemiMajorAxis = (int) (elipse.getSemiMajorAxis() * factor);
+                    int newSemiMinorAxis = (int) (elipse.getSemiMinorAxis() * factor);
+                    elipse.setSemiMajorAxis(Math.max(10, Math.min(200, newSemiMajorAxis)));
+                    elipse.setSemiMinorAxis(Math.max(10, Math.min(200, newSemiMinorAxis)));
+                    areaPercentage();
+                }
+                repaint();
+            }
+        }       
         public void addCircle(Color color) {
             DrawableCircle circle = new DrawableCircle(new Point(100, 100), 50, color);
             drawables.addShape(circle);

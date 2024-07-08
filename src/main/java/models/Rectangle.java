@@ -13,6 +13,13 @@ import java.awt.Graphics;
 public class Rectangle extends Shape {
     int width,height;
 
+    // Constructor sin argumentos
+    public Rectangle() {
+        super(new Point(), Color.BLACK, "Rectangle");
+        this.width = 0;
+        this.height = 0;
+    }
+    
     public Rectangle(Point start, int width, int height, Color color) {
         super(start, color, "Rectangle");
         this.width = width;

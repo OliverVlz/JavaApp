@@ -22,6 +22,7 @@ public class DrawableRectangle extends Rectangle implements Drawable {
     @Override
     public void draw(Graphics g, boolean selected) {
         g.setColor(selected ? Color.GREEN : getColor());
+        
         g.drawRect(this.getStart().getX() - getWidth() / 2,
                    this.getStart().getY() - getHeight() / 2,
                    getWidth(), getHeight());

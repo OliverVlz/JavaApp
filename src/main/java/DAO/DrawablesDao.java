@@ -31,6 +31,7 @@ public class DrawablesDao {
     public void add(Drawable drawable) {
         if (drawable instanceof Shape shape) {
             drawables.put(shape.getId(), drawable);
+            System.out.println("ID: " + shape.getId() + ", Posición: (" + shape.getStart().getX() + ", " + shape.getStart().getY() + ")," + shape + " Color: " + shape.getColor());
         }
     }
 
@@ -122,12 +123,18 @@ public class DrawablesDao {
         jsonUtils.saveToJson(shapes, filename);
     }
 
+    /**
+     * Carga las figuras desde un archivo JSON.
+     * @param filename El nombre del archivo desde donde se cargarán las figuras.
+     */
     public void loadFromJson(String filename) {
         List<Shape> shapes = jsonUtils.loadFromJson(filename);
         if (shapes != null) {
-            drawables.clear();
+            //drawables.clear();
             for (Shape shape : shapes) {
-                drawables.put(shape.getId(), (Drawable) shape);
+                if (shape instanceof Drawable drawable) {
+                    drawables.put(shape.getId(), drawable);
+                }
             }
         }
     }
